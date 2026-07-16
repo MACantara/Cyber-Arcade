@@ -39,12 +39,13 @@ Earn XP, unlock badges, keep a streak, and view a local leaderboard.
 ## Project docs
 
 - `AGENTS.md` — agent conventions and quick start
-- `DESIGN.md` — design system
+- `DESIGN.md` — design system (tokens, colors, typography, components, responsive)
 - `ARCHITECTURE.md` — system architecture
 - `TESTING.md` — testing checklist
 - `STYLEGUIDE.md` — coding conventions
 - `SECURITY.md` — threat model and mitigations
 - `DATABASE.md` — storage schema
+- `ROADMAP.md` — planned features and potential new modules
 - `llms.txt` — repository index for LLMs
 
 ## Deployment

@@ -14,18 +14,15 @@ Testing is primarily manual because the app is a static website with no backend.
 4. Complete a challenge and reload the page to confirm progress persists.
 5. Test navigation between pages using the in-app links.
 6. Test a challenge page from `file://` (labs should render in the Shadow DOM).
-7. Test responsive layouts at 320px, 768px, 1024px.
+7. Test responsive layouts at 320px, 640px, 768px, 1024px, and 1440px.
 
 ## Automated sanity checks
 
-- `node --check src/labs/lab-runner.js`
-- `node --check src/storage-proxy.js`
-- `node --check src/services/store.js`
-- `node --check src/services/progress.js`
-- `node --check src/services/gamify.js`
-- `node --check src/modules/registry.js`
+- `Get-ChildItem -Recurse -Path src -Filter *.js | ForEach-Object { node --check $_.FullName }` (or `node --check <file>` for each changed file).
 - `grep -R "eval\|new Function\|document.write" src/` should return nothing.
 - `grep -R "innerHTML" src/` should only show static/sanitized uses.
+- `grep -R "setStyle" src/` should return nothing.
+- Inline `style` attributes and `.style.*` assignments should only set CSS custom properties for dynamic values (e.g., `--width`).
 - Lighthouse targets:
   - Performance >= 90
   - Accessibility >= 90

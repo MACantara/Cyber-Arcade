@@ -43,6 +43,13 @@ A retro 8-bit arcade learning platform. It should feel like a neon arcade cabine
 - `--text-2xl`: 2.25rem (36px)
 - `--text-3xl`: 3.25rem (52px)
 
+### Font weights
+- `--font-weight-headline`: 400
+- `--font-weight-terminal`: 400
+- `--font-weight-body`: 400
+- `--font-weight-body-strong`: 600
+- `--font-weight-bold`: 700
+
 Headlines use `line-height: 1.2` and `text-transform: uppercase`. Body uses `line-height: 1.6`. Pixel font uses `letter-spacing: 0.08em`.
 
 ## Spacing
@@ -61,23 +68,27 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 
 ## Components
 
+All UI is built with reusable external CSS classes. Avoid inline `style` attributes and JavaScript `.style.*` assignments; use design tokens and shared classes. Dynamic values (e.g., progress bar widths) may be passed as CSS custom properties on elements that already have an external class.
+
 ### Button
 - `font-family: 'Press Start 2P'`, uppercase, `--text-xs`.
 - Padding `0.75rem 1.25rem`.
 - Background `var(--color-primary)`, color `var(--color-black)`.
 - Border `2px solid var(--color-white)` and `box-shadow: 4px 4px 0 var(--color-white)` for 8-bit depth.
 - Active state moves shadow to `2px 2px 0` and translates `2px 2px`.
-- Variants: `btn-primary`, `btn-danger`, `btn-ghost`, `btn-coin` (gold).
+- Variants: `btn-primary`, `btn-danger`, `btn-ghost`, `btn-coin` (gold), `btn-filter` (domain filters on the learn page).
 
 ### Card
 - Background `var(--color-surface)`, border `2px solid var(--color-gray-300)`.
 - `box-shadow: 4px 4px 0 var(--color-gray-300)`.
-- Fixed size range: `min-height: 260px`, `max-height: 320px`, with `overflow: hidden`.
-- Use `display: flex; flex-direction: column;` so the footer action stays anchored.
+- Fixed size range: `min-height: 260px`, `max-height: 320px`, with `overflow: hidden` (`min-height: 240px` on mobile).
+- Use `display: flex; flex-direction: column;` and a `.card-footer` with `margin-top: auto` to pin the action row to the bottom.
 - Clamp the description paragraph to three lines with `line-clamp` so long text never breaks the card height.
 - Hover lifts card and brightens border.
 - Header uses pixel font and uppercase.
-- Status labels are `AVAILABLE` (playable), `IN PROGRESS`, `COMPLETED`, or `LOCKED` (only when prerequisites are not met). A locked card shows a disabled lock button with a tooltip naming the required missions.
+- Status labels are `AVAILABLE` (playable), `IN PROGRESS`, `COMPLETED`, or `LOCKED` (only when prerequisites are not met). A locked card uses `.card-locked` and a disabled lock button with a tooltip naming the required missions.
+- Difficulty color classes: `.difficulty-beginner`, `.difficulty-easy`, `.difficulty-medium`, `.difficulty-hard`.
+- Domain cards use `.domain-card` plus `.card-compact` for intro/section cards on the learn page.
 
 ### Input
 - Monospace terminal font.
@@ -86,7 +97,12 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 
 ### HUD bar
 - Sticky top bar with level, XP, coins, streak, badge count.
-- Pixel font for numbers, pixel hearts for lives.
+- Pixel font for numbers.
+- Uses `.hud-stat-xp` for the XP bar stat and wraps on narrow screens; stat labels are hidden on very small viewports.
+
+### Leaderboard table
+- Uses `.leaderboard-table` with a `.table-scroll` wrapper for horizontal scrolling on small screens.
+- Terminal font, `100%` width, `white-space: nowrap` cells, and `text-base` on mobile scaling to `text-lg` at `768px`.
 
 ### Terminal
 - Black background, green text, scanlines.
@@ -103,13 +119,15 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 ### Lab frame
 - Sandboxed `iframe` styled as a mini CRT screen with a bezel.
 - Bezel: dark gradient with inset shadow and scanline overlay.
+- Lab frame height is `300px` on mobile and `400px` at `768px` and up.
 - On `file://` the lab is mounted into a Shadow DOM host (`.lab-screen`) so the same design-system stylesheets must be injected or inlined.
 
 ### Labs
 - Every lab receives a `container` element; mount all lab UI inside it.
-- Scope lab styles to a `.lab` wrapper and append the `<style>` element to the wrapper, not `document.head`.
+- Prefer the shared lab classes in `components.css`: `.lab-body`, `.lab-title`, `.lab-label`, `.lab-input`, `.lab-btn`, `.lab-output`, `.lab-status`, `.lab-sr-only`.
+- When a lab needs custom styles, scope them to a `.lab` wrapper and append the `<style>` element to the wrapper, not `document.head`.
 - Do not rely on `body`, `html`, `vh`, or `vw` units — the lab runs inside a fixed-size frame.
-- Use the design-token CSS variables (`--color-*`, `--font-*`, `--space-*`, `--shadow`) instead of hard-coded hex values.
+- Use the design-token CSS variables (`--color-*`, `--font-*`, `--space-*`, `--shadow`, `--font-weight-*`) instead of hard-coded hex values.
 - Re-use shared component classes where possible: `.btn`, `.input`, `.terminal`.
 - The lab wrapper should use `min-height: 100%` to fill the `.lab-screen` frame without overflowing the page.
 

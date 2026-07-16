@@ -31,6 +31,8 @@ Cyber-Arcade is a static multi-page website that runs entirely in the browser. T
 
 - `src/components/` — self-registering Web Components.
 - `src/styles/` — CSS layers: tokens, base, components, animations, utilities.
+- All UI is styled with reusable external classes; dynamic values are passed via CSS custom properties.
+- The layout is mobile-first and responsive, scaling from single-column grids on narrow viewports to multi-column grids on larger screens.
 
 ### Lab engine
 

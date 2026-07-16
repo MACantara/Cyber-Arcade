@@ -41,11 +41,14 @@
 - Use `--font-weight-body` for body text, `--font-weight-body-strong` for emphasized labels, and `--font-weight-bold` for `b`/`strong` in `Inter`.
 - Maintain strong contrast: near-white text (`#f7f8fa`) on deep space background (`#070914`), with lightened grays (`#e4e8ef`, `#a2abc0`) for secondary text.
 - Body text uses `--text-base` (1rem / 16px); the type scale ranges from `--text-xs` (0.75rem) to `--text-3xl` (3.25rem).
+- Use `--font-weight-headline`, `--font-weight-terminal`, `--font-weight-body`, `--font-weight-body-strong`, and `--font-weight-bold` from `tokens.css`.
 - Write CSS mobile-first: base styles target narrow viewports and use `min-width` media queries to scale up.
 - Use breakpoints `480px`, `640px`, `768px`, `1024px`, and `1440px`.
 - Keep grids single-column on mobile and expand to 2/3/4 columns at breakpoints.
 - Make HUDs, tables, and toasts usable on small screens: wrap or scroll when needed.
 - Cards use a fixed size range (`min-height: 260px`, `max-height: 320px`) and clamp the description to three lines so the grid stays uniform.
+- No inline `style` attributes or JavaScript `.style.*` assignments; use external classes and CSS custom properties for dynamic values.
+- Re-use shared lab classes in `src/styles/components.css` (`.lab-body`, `.lab-title`, `.lab-label`, `.lab-input`, `.lab-btn`, `.lab-output`, `.lab-status`, `.lab-sr-only`) before adding scoped `<style>` blocks.
 - Respect `prefers-reduced-motion`.
 
 ## HTML conventions

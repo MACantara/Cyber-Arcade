@@ -7,7 +7,8 @@
 - **Type:** Static multi-page website
 - **Stack:** Modern HTML, CSS, and vanilla JavaScript (classic scripts, no build)
 - **Storage:** `localStorage` on HTTP/HTTPS, `window.name` on `file://`
-- **Theme:** Retro 8-bit arcade cabinet
+- **Theme:** Retro 8-bit arcade cabinet with high-contrast, accessible neon colors.
+- **Styling:** Mobile-first responsive layout using reusable external CSS classes and design-token custom properties; no inline styles.
 - **Deployment:** GitHub Pages, Netlify, Vercel, or any static CDN
 - **Repo root:** `C:\Projects\Devin-Agent-Test`
 - **Vercel config:** `vercel.json` sets `outputDirectory: "."`
@@ -30,7 +31,7 @@
 
 ## Technologies
 - HTML5: semantic elements, `<dialog>`, `<details>`, `<template>`, `<canvas>`, `<iframe sandbox>`.
-- CSS: custom properties, `@layer`, container queries, view transitions, `prefers-reduced-motion`.
+- CSS: custom properties, `@layer`, mobile-first media queries (with container queries where appropriate), view transitions, `prefers-reduced-motion`. No inline styles; reusable external classes and CSS custom properties for dynamic values.
 - JS: classic scripts, IIFEs, private fields, `async/await`, `structuredClone`.
 - Storage: `localStorage` / `window.name`.
 
@@ -43,20 +44,20 @@
 - Vercel config: `vercel.json`
 
 ## Documentation index
-- `AGENTS.md` — agent conventions, quick start, build/deploy, security rules.
-- `DESIGN.md` — design system (colors, typography, spacing, components, animation, lab design).
+- `AGENTS.md` — agent conventions, quick start, build/deploy, security rules, lab module API.
+- `DESIGN.md` — design system (colors, typography, spacing, components, responsive, lab design).
 - `ARCHITECTURE.md` — system design, module layout, data flow.
 - `DATABASE.md` — storage schema and backends.
-- `STYLEGUIDE.md` — naming, formatting, code conventions.
+- `STYLEGUIDE.md` — naming, formatting, code conventions (mobile-first, no inline styles).
 - `SECURITY.md` — threat model, sandbox, no-eval policy.
 - `TESTING.md` — testing strategy, verification checklist.
 - `PROMPTS.md` — reusable prompts and agent workflows.
 - `MEMORY.md` — long-term context, recurring decisions, unresolved issues.
-- `ROADMAP.md` — planned features and milestones.
+- `ROADMAP.md` — planned features, milestones, and potential new modules.
 - `DECISIONS.md` — architecture decision records.
 - `API.md` — client-only API.
 - `CONTRIBUTING.md` — workflow for human contributors.
 - `README.md` — human-facing quick start and project description.
 
 ## For agents
-Before writing code, read `AGENTS.md` and `DESIGN.md`. Add new labs under `src/modules/<domain>/<challenge>/lab.js` and register the challenge manifest in `src/modules/manifests.js`. Keep all challenge code free of `eval` and user-supplied script execution.
+Before writing code, read `AGENTS.md`, `DESIGN.md`, and `STYLEGUIDE.md`. Add new labs under `src/modules/<domain>/<challenge>/lab.js` and register the challenge manifest in `src/modules/manifests.js`. Build lab UIs with the shared `.lab-*` classes in `src/styles/components.css` and avoid inline styles; dynamic values should use CSS custom properties. Keep all challenge code free of `eval` and user-supplied script execution.

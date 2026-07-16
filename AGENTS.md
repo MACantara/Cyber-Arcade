@@ -72,8 +72,11 @@ public/             Static assets
 - Use `src/styles/tokens.css` for design tokens.
 - Use `@layer` for base, components, utilities, animations.
 - Prefer `rem`/`px` where the 8-bit pixel grid calls for pixels.
-- Use `container-queries` for responsive components.
-- Use `view-transition-name` for page transitions.
+- Mobile-first: write base styles for narrow viewports and use `min-width` media queries to scale up.
+- Use media queries for responsive layouts; container queries may be used where components need to adapt to their own size.
+- Use `view-transition-name` for page transitions where supported.
+- No inline `style` attributes or JavaScript `.style.*` assignments; use external classes and CSS custom properties for dynamic values.
+- Re-use shared lab classes (`.lab-body`, `.lab-title`, `.lab-label`, `.lab-input`, `.lab-btn`, `.lab-output`, `.lab-status`, `.lab-sr-only`) before adding scoped `<style>` blocks.
 - Respect `prefers-reduced-motion`.
 
 ### Icons
@@ -123,10 +126,12 @@ A `lab.js` file is a classic script wrapped in an IIFE. It must register on `win
 
 Do not use `eval`, `new Function`, `document.write`, or `innerHTML` with user input. Use `textContent` and `createElement`.
 
+When building lab UIs, prefer the shared lab classes in `src/styles/components.css` (`.lab-body`, `.lab-title`, `.lab-label`, `.lab-input`, `.lab-btn`, `.lab-output`, `.lab-status`, `.lab-sr-only`). Add a scoped `<style>` block only when custom styles are required, and scope it to a `.lab` wrapper inside the container.
+
 A challenge is registered by adding its manifest object to `window.CA.CHALLENGE_MANIFESTS` in `src/modules/manifests.js`.
 
 ## Agent workflow
-- Read `DESIGN.md` and `ARCHITECTURE.md` before writing code.
+- Read `DESIGN.md`, `ARCHITECTURE.md`, and `STYLEGUIDE.md` before writing code.
 - Add a lab by creating `src/modules/<domain>/<challenge>/lab.js` and adding the manifest to `src/modules/manifests.js`.
-- Keep modules self-contained.
+- Keep modules self-contained and free of inline styles; use reusable CSS classes and CSS custom properties for dynamic values.
 - Update `llms.txt` if you add or move documentation.
