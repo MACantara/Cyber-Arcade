@@ -77,6 +77,11 @@
     gap: var(--space-2);
   }
 
+  .card-compact {
+    min-height: auto;
+    max-height: none;
+  }
+
   .card:hover {
     border-color: var(--color-primary);
     transform: translate(-2px, -2px);

@@ -43,11 +43,11 @@ class XLearn extends HTMLElement {
     const selected = this.#filter === 'all' ? null : DOMAINS.find(d => d.id === this.#filter)
     const activeClass = (id) => this.#filter === id ? 'btn-filter active' : 'btn-filter'
     const domainIntro = selected
-      ? `<div class="card mb-6 domain-card ${selected.id}">
+      ? `<div class="card card-compact mb-6 domain-card ${selected.id}">
           <div class="card-header">${selected.label}</div>
           <p class="color-muted">${selected.description}</p>
         </div>`
-      : `<div class="card mb-6">
+      : `<div class="card card-compact mb-6">
           <div class="card-header">Welcome to the Academy</div>
           <p class="color-muted">Each module is a self-contained, hands-on lab. Complete missions to earn XP, keep your streak alive, and unlock badges. Use the filters above to focus on a specific cyber discipline.</p>
         </div>`
