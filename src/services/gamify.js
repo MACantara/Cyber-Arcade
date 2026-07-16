@@ -19,19 +19,29 @@ function computeXpForChallenge(base, score, hintsUsed) {
   return Math.max(0, scoreBonus - hintPenalty)
 }
 
-function updateStreak(profile) {
-  const today = new Date().toISOString().slice(0, 10)
+function updateStreak(profile, { activity = false } = {}) {
+  const now = new Date().toISOString()
+  const today = now.slice(0, 10)
   const last = profile.lastActive?.slice(0, 10)
-  if (!last || last === today) return profile
   const yesterday = new Date()
   yesterday.setDate(yesterday.getDate() - 1)
   const yesterdayStr = yesterday.toISOString().slice(0, 10)
-  if (last === yesterdayStr) {
-    profile.streak = (profile.streak || 0) + 1
-  } else {
-    profile.streak = 1
+
+  if (activity) {
+    if (!last) {
+      profile.streak = 1
+    } else if (last === today) {
+      if (!profile.streak) profile.streak = 1
+    } else if (last === yesterdayStr) {
+      profile.streak = (profile.streak || 0) + 1
+    } else {
+      profile.streak = 1
+    }
+    profile.lastActive = now
+  } else if (last && last !== today && last !== yesterdayStr) {
+    profile.streak = 0
   }
-  profile.lastActive = new Date().toISOString()
+
   return profile
 }
 

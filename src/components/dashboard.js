@@ -53,7 +53,6 @@ class XDashboard extends HTMLElement {
 
         <div class="mt-8 text-center">
           <a href="./learn.html" class="btn btn-primary">Browse All Challenges</a>
-          <a href="./profile.html" class="btn btn-ghost">View Profile</a>
         </div>
       </section>
     `

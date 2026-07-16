@@ -12,7 +12,7 @@ async function loadProfile() {
     profile = { id: 'default', name: 'Player 1', xp: 0, level: 1, streak: 0, lastActive: now, createdAt: now, updatedAt: now }
     await db.put('profiles', profile)
   } else {
-    profile = updateStreak(profile)
+    profile = updateStreak(profile, { activity: false })
     profile.updatedAt = new Date().toISOString()
     await db.put('profiles', profile)
   }
@@ -74,6 +74,7 @@ async function completeChallenge(challenge, score, hintsUsed) {
   await db.put('progress', started)
 
   const profile = await db.get('profiles', 'default')
+  updateStreak(profile, { activity: true })
   const xp = computeXpForChallenge(challenge.xp, score, hintsUsed)
   profile.xp += xp
   profile.level = getLevel(profile.xp)
