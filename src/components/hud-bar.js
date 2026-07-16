@@ -5,6 +5,7 @@ const { getLevelProgress } = window.CA.services.gamify
 
 class XHudBar extends HTMLElement {
   #unsubscribe = null
+  #toggle = null
 
   connectedCallback() {
     this.innerHTML = `
@@ -29,18 +30,38 @@ class XHudBar extends HTMLElement {
             <span class="hud-stat-value" id="hud-badges">0</span>
             <span class="hud-stat-label">BADGES</span>
           </div>
-          <a href="./profile.html" class="btn btn-ghost" aria-label="Profile"><i data-lucide="user" aria-hidden="true"></i></a>
-          <a href="./settings.html" class="btn btn-ghost" aria-label="Settings"><i data-lucide="settings" aria-hidden="true"></i></a>
+          <div class="hud-actions">
+            <a href="./profile.html" class="btn btn-ghost" aria-label="Profile"><i data-lucide="user" aria-hidden="true"></i></a>
+            <button id="nav-toggle" class="btn btn-ghost" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu"><i data-lucide="menu" aria-hidden="true"></i></button>
+            <ul id="nav-menu" class="nav-menu hidden" role="menu" aria-label="Site navigation">
+              <li role="none"><a href="./index.html" role="menuitem">Dashboard</a></li>
+              <li role="none"><a href="./learn.html" role="menuitem">Learn</a></li>
+              <li role="none"><a href="./profile.html" role="menuitem">Profile</a></li>
+              <li role="none"><a href="./leaderboard.html" role="menuitem">Leaderboard</a></li>
+              <li role="none"><a href="./settings.html" role="menuitem">Settings</a></li>
+            </ul>
+          </div>
         </nav>
       </header>
     `
     if (window.lucide) window.lucide.createIcons()
+    this.#toggle = () => this.#toggleMenu()
+    this.querySelector('#nav-toggle')?.addEventListener('click', this.#toggle)
     this.#unsubscribe = store.subscribe((state) => this.update(state))
     this.update(store.get())
   }
 
   disconnectedCallback() {
     this.#unsubscribe?.()
+    if (this.#toggle) this.querySelector('#nav-toggle')?.removeEventListener('click', this.#toggle)
+  }
+
+  #toggleMenu() {
+    const menu = this.querySelector('#nav-menu')
+    const btn = this.querySelector('#nav-toggle')
+    if (!menu || !btn) return
+    const hidden = menu.classList.toggle('hidden')
+    btn.setAttribute('aria-expanded', String(!hidden))
   }
 
   update(state) {

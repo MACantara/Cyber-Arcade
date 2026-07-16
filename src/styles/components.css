@@ -227,6 +227,60 @@
     font-size: var(--text-xs);
   }
 
+  .hud-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 180px;
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-gray-300);
+    box-shadow: var(--shadow);
+    padding: var(--space-2);
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    z-index: 200;
+  }
+
+  .nav-menu li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-menu a,
+  .nav-menu button {
+    display: block;
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-headline);
+    font-weight: var(--font-weight-headline);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--color-white);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .nav-menu a:hover,
+  .nav-menu a:focus,
+  .nav-menu button:hover,
+  .nav-menu button:focus {
+    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
+  }
+
   .xp-bar {
     width: 100%;
     height: var(--space-3);
