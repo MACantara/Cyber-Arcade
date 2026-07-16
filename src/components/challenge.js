@@ -2,7 +2,7 @@
 
 const store = window.CA.services.store
 const registry = window.CA.registry
-const { startChallenge, completeChallenge, useHint } = window.CA.services.progress
+const { startChallenge, completeChallenge, useHint, getChallengeStatus } = window.CA.services.progress
 const LabRunner = window.CA.LabRunner
 const toast = window.CA.toast
 
@@ -12,6 +12,8 @@ class XChallenge extends HTMLElement {
   #challenge = null
   #hintsRevealed = 0
   #initialized = false
+  #completed = false
+  #completion = null
 
   static get observedAttributes() { return ['challenge-id'] }
 
@@ -36,6 +38,8 @@ class XChallenge extends HTMLElement {
   async #init() {
     if (this.#initialized || !this.#challenge) return
     this.#initialized = true
+    this.#completed = false
+    this.#completion = null
     await startChallenge(this.#challenge)
     this.#render()
     this.#mountLab()
@@ -57,6 +61,10 @@ class XChallenge extends HTMLElement {
   }
 
   #render() {
+    if (this.#completed && this.#completion) {
+      this.#renderCompletion()
+      return
+    }
     const c = this.#challenge
     this.innerHTML = `
       <section class="page">
@@ -133,21 +141,55 @@ class XChallenge extends HTMLElement {
   async #onComplete(detail) {
     const { record, xp, profile } = await completeChallenge(this.#challenge, detail.score || 100, this.#hintsRevealed)
     toast(`Challenge complete! +${xp} XP`, 'success')
-    const terminal = this.querySelector('#terminal')
-    if (terminal && terminal.addLine) {
-      terminal.addLine(`> Flag captured: ${detail.flag || 'N/A'}`)
-      terminal.addLine(`> +${xp} XP earned`)
-      terminal.addLine(`> Level ${profile.level}`)
-    }
-    this.#updateProgress()
-    this.querySelector('#reset-btn')?.remove()
-    this.querySelector('#hint-btn')?.remove()
+    this.#completion = { ...detail, record, xp, profile }
+    this.#completed = true
+    this.#render()
   }
 
   #onFail(detail) {
     toast(detail.message || 'Try again.', 'error')
     const terminal = this.querySelector('#terminal')
     if (terminal && terminal.addLine) terminal.addLine(`> ${detail.message || 'Incorrect.'}`)
+  }
+
+  #renderCompletion() {
+    const c = this.#challenge
+    const { xp, flag } = this.#completion
+    const next = this.#nextChallenge()
+    const nextLink = next
+      ? `<a href="./challenge.html?id=${next.id}" class="btn btn-primary"><i data-lucide="arrow-right" aria-hidden="true"></i> Next: ${next.title}</a>`
+      : ''
+
+    this.innerHTML = `
+      <section class="page page-center">
+        <a href="./learn.html" class="btn btn-ghost mb-4"><i data-lucide="arrow-left" aria-hidden="true"></i> Back</a>
+        <div class="card challenge-complete">
+          <i data-lucide="trophy" class="lucide celebration-icon" aria-hidden="true"></i>
+          <h1 class="text-2xl color-primary">${c.title}</h1>
+          <p class="subtitle">Mission complete!</p>
+          <div class="font-headline text-sm color-quaternary mb-2">+${xp} XP earned</div>
+          <div class="font-terminal color-primary">Flag: ${flag || 'N/A'}</div>
+          <div class="completion-actions">
+            <a href="./learn.html" class="btn btn-ghost"><i data-lucide="book-open" aria-hidden="true"></i> Back to Learn</a>
+            <a href="./index.html" class="btn btn-ghost"><i data-lucide="layout-dashboard" aria-hidden="true"></i> Dashboard</a>
+            ${nextLink}
+          </div>
+        </div>
+      </section>
+    `
+    if (window.lucide) window.lucide.createIcons()
+  }
+
+  #nextChallenge() {
+    const progress = store.get('progress') || new Map()
+    const all = registry.getAll()
+    const candidates = all.filter(ch =>
+      ch.id !== this.#challenge.id &&
+      getChallengeStatus(ch, progress) !== 'completed' &&
+      getChallengeStatus(ch, progress) !== 'locked'
+    )
+    const sameDomain = candidates.filter(ch => ch.domain === this.#challenge.domain)
+    return sameDomain[0] || candidates[0] || null
   }
 
   #renderNotFound() {
