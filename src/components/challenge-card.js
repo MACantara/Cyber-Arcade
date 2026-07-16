@@ -28,12 +28,12 @@ class XChallengeCard extends HTMLElement {
         <div class="card-header">${challenge.domain?.toUpperCase()}</div>
         <h3 class="text-md mb-2">${challenge.title}</h3>
         <p class="text-sm color-muted mb-4">${challenge.description}</p>
-        <div class="card-footer">
-          <div class="flex items-center wrap gap-2">
-            <span class="badge">${challenge.difficulty?.toUpperCase()}</span>
-            <span class="font-headline text-xs color-quaternary">+${challenge.xp} XP</span>
-            <span class="text-xs font-headline color-muted">${statusLabel}</span>
-          </div>
+        <div class="flex items-center justify-between wrap gap-2">
+          <span class="badge">${challenge.difficulty?.toUpperCase()}</span>
+          <span class="font-headline text-xs color-quaternary">+${challenge.xp} XP</span>
+        </div>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="text-xs font-headline color-muted">${statusLabel}</span>
           ${isLocked
             ? `<button class="btn btn-ghost" disabled title="${lockReason}"><i data-lucide="lock" aria-hidden="true"></i> LOCKED</button>`
             : `<a href="./challenge.html?id=${challenge.id}" class="btn"><i data-lucide="play" aria-hidden="true"></i> ${isStarted ? 'CONTINUE' : 'PLAY'}</a>`}
