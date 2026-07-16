@@ -74,11 +74,25 @@ class LabRunner {
   }
 
   #mountDirect() {
-    this.container.innerHTML = ''
+    let shadow = this.container.shadowRoot
+    if (!shadow) shadow = this.container.attachShadow({ mode: 'open' })
+    shadow.innerHTML = ''
+
+    const wrapper = document.createElement('div')
+    wrapper.style.width = '100%'
+    wrapper.style.height = '400px'
+    wrapper.style.backgroundColor = 'var(--color-black, #05060a)'
+    wrapper.style.border = '2px solid var(--color-gray-300)'
+    wrapper.style.overflow = 'auto'
+    wrapper.style.boxSizing = 'border-box'
+
     const div = document.createElement('div')
-    div.className = 'lab-screen'
-    this.container.appendChild(div)
-    this.#directContainer = div
+    div.style.width = '100%'
+    div.style.minHeight = '100%'
+    div.style.boxSizing = 'border-box'
+    wrapper.appendChild(div)
+    shadow.appendChild(wrapper)
+    this.#directContainer = wrapper
 
     const key = `${this.challenge.domain}/${this.challenge.id}`
     const script = document.createElement('script')
