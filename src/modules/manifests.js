@@ -155,5 +155,81 @@ window.CA.CHALLENGE_MANIFESTS = [
   }
 ]
 
+const DOMAINS = window.CA?.DOMAINS || []
+const VALID_DIFFICULTIES = ['beginner', 'easy', 'medium', 'hard']
+const VALID_DOMAINS = new Set(DOMAINS.map(d => d.id))
+
+function validateManifest(manifest, index, domains, manifests) {
+  const errors = []
+  const required = ['id', 'title', 'domain', 'difficulty', 'description', 'xp', 'objective', 'hints', 'successCriteria']
+  const knownDomains = domains
+    ? new Set(Array.isArray(domains) ? domains : [...domains])
+    : VALID_DOMAINS
+  const allManifests = manifests || CHALLENGE_MANIFESTS
+
+  for (const field of required) {
+    if (manifest[field] == null) errors.push(`manifest[${index}].${field} is required`)
+  }
+
+  if (manifest.id && typeof manifest.id !== 'string') {
+    errors.push(`manifest[${index}].id must be a string`)
+  }
+
+  if (manifest.title && typeof manifest.title !== 'string') {
+    errors.push(`manifest[${index}].title must be a string`)
+  }
+
+  if (manifest.domain) {
+    if (typeof manifest.domain !== 'string') {
+      errors.push(`manifest[${index}].domain must be a string`)
+    } else if (knownDomains.size > 0 && !knownDomains.has(manifest.domain)) {
+      errors.push(`manifest[${index}].domain "${manifest.domain}" is not a known domain`)
+    }
+  }
+
+  if (manifest.difficulty && !VALID_DIFFICULTIES.includes(manifest.difficulty)) {
+    errors.push(`manifest[${index}].difficulty must be one of ${VALID_DIFFICULTIES.join(', ')}`)
+  }
+
+  if (typeof manifest.xp !== 'number' || manifest.xp < 0 || !Number.isFinite(manifest.xp)) {
+    errors.push(`manifest[${index}].xp must be a non-negative finite number`)
+  }
+
+  if (manifest.hints && !Array.isArray(manifest.hints)) {
+    errors.push(`manifest[${index}].hints must be an array`)
+  }
+
+  if (manifest.successCriteria != null && !Array.isArray(manifest.successCriteria) && typeof manifest.successCriteria !== 'string') {
+    errors.push(`manifest[${index}].successCriteria must be an array or string`)
+  }
+
+  if (manifest.prerequisites != null && !Array.isArray(manifest.prerequisites)) {
+    errors.push(`manifest[${index}].prerequisites must be an array`)
+  }
+
+  if (manifest.prerequisites) {
+    for (const prereq of manifest.prerequisites) {
+      if (typeof prereq !== 'string') {
+        errors.push(`manifest[${index}].prerequisites must contain only strings`)
+        break
+      }
+      if (!allManifests.some(c => c.id === prereq)) {
+        errors.push(`manifest[${index}] references unknown prerequisite "${prereq}"`)
+      }
+    }
+  }
+
+  return errors
+}
+
+const validationErrors = CHALLENGE_MANIFESTS.flatMap((m, i) => validateManifest(m, i))
+if (validationErrors.length) {
+  console.error('Manifest validation errors:', validationErrors)
+}
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = CHALLENGE_MANIFESTS
+window.CA.validateManifest = validateManifest
+
 
 })()

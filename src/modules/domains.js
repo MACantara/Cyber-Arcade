@@ -1,0 +1,12 @@
+(function () {
+
+window.CA = window.CA || {}
+window.CA.DOMAINS = [
+  { id: 'web', label: 'Web App Security', color: 'var(--color-primary)', description: 'Find and exploit common web vulnerabilities like XSS and SQL injection in a safe, interactive sandbox.' },
+  { id: 'network', label: 'Network & System', color: 'var(--color-tertiary)', description: 'Explore how networks and services talk to each other by solving packet, port, and protocol puzzles.' },
+  { id: 'crypto', label: 'Crypto & Binary', color: 'var(--color-quaternary)', description: 'Practice encoding, decoding, and classic ciphers used in cryptography and binary analysis.' },
+  { id: 'general', label: 'General', color: 'var(--color-secondary)', description: 'Build foundational skills with terminal exploration, reconnaissance, and logical reasoning missions.' }
+]
+
+
+})()

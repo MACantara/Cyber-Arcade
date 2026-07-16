@@ -39,7 +39,8 @@ src/
   styles/           CSS architecture
   labs/             Lab runner and sandbox runtime
   modules/          Domain modules
-    manifests.js    Central challenge manifest registry
+    domains.js      Shared domain config (labels, colors, descriptions)
+    manifests.js    Central challenge manifest registry and validator
     registry.js     Challenge lookup helpers
     web/
     network/
@@ -132,6 +133,8 @@ A challenge is registered by adding its manifest object to `window.CA.CHALLENGE_
 
 ## Agent workflow
 - Read `DESIGN.md`, `ARCHITECTURE.md`, and `STYLEGUIDE.md` before writing code.
-- Add a lab by creating `src/modules/<domain>/<challenge>/lab.js` and adding the manifest to `src/modules/manifests.js`.
+- To add a new domain, update `src/modules/domains.js` and add a matching `.btn-filter.active.domain-<id>` style in `src/styles/components.css`.
+- To add a lab, create `src/modules/<domain>/<challenge>/lab.js` and add a manifest object to `src/modules/manifests.js`.
+- Run `node tests/manifests.test.js` after adding or editing manifests.
 - Keep modules self-contained and free of inline styles; use reusable CSS classes and CSS custom properties for dynamic values.
 - Update `llms.txt` if you add or move documentation.

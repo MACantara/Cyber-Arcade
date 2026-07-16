@@ -22,9 +22,10 @@ Cyber-Arcade is a static multi-page website that runs entirely in the browser. T
 - `src/global.js` — creates `window.CA` namespaces.
 - `src/storage-proxy.js` — `db` service backed by `localStorage` (HTTP/HTTPS) or `window.name` (`file://`).
 - `src/services/store.js` — reactive state container.
-- `src/services/gamify.js` — XP/level, streaks, badges, daily challenges.
+- `src/services/gamify.js` — XP/level, streaks, badges, daily challenges. Badges for non-`general` domains are generated from `window.CA.DOMAINS`.
 - `src/services/progress.js` — starts, completes, and resets challenges.
-- `src/modules/manifests.js` — global `window.CA.CHALLENGE_MANIFESTS` array.
+- `src/modules/domains.js` — shared `window.CA.DOMAINS` array with labels, colors, and descriptions for each domain.
+- `src/modules/manifests.js` — global `window.CA.CHALLENGE_MANIFESTS` array, registered on `window.CA.validateManifest`, and validated at load time.
 - `src/modules/registry.js` — flat lookup over `CHALLENGE_MANIFESTS`.
 
 ### UI layer

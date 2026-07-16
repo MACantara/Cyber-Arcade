@@ -19,6 +19,7 @@ Testing is primarily manual because the app is a static website with no backend.
 ## Automated sanity checks
 
 - `Get-ChildItem -Recurse -Path src -Filter *.js | ForEach-Object { node --check $_.FullName }` (or `node --check <file>` for each changed file).
+- `node tests/manifests.test.js` validates all challenge manifests.
 - `grep -R "eval\|new Function\|document.write" src/` should return nothing.
 - `grep -R "innerHTML" src/` should only show static/sanitized uses.
 - `grep -R "setStyle" src/` should return nothing.

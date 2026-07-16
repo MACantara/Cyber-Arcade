@@ -17,11 +17,12 @@
 - `index.html`, `learn.html`, `challenge.html`, `profile.html`, `leaderboard.html`, `settings.html` are separate pages.
 - Every page loads `src/global.js`, `src/storage-proxy.js`, services, manifests, registry, components, and a page boot script.
 - All shared code is attached to `window.CA`.
-- `src/modules/manifests.js` defines `window.CA.CHALLENGE_MANIFESTS`.
+- `src/modules/domains.js` defines `window.CA.DOMAINS` (labels, colors, descriptions) used by the learn page and `gamify.js`.
+- `src/modules/manifests.js` defines `window.CA.CHALLENGE_MANIFESTS` and exposes `window.CA.validateManifest` for runtime and `node tests/manifests.test.js` validation.
 - `src/modules/registry.js` provides challenge lookup helpers.
 - `src/services/store.js` is a tiny reactive store.
 - `src/services/progress.js` reads/writes challenge completion.
-- `src/services/gamify.js` computes XP, levels, streaks, badges, and daily challenges.
+- `src/services/gamify.js` computes XP, levels, streaks, badges, and daily challenges. Domain count badges are generated from `window.CA.DOMAINS`.
 - `src/storage-proxy.js` is the `db` service that persists to `localStorage` or `window.name`.
 - `src/components/` contains self-registering Web Components.
 - `src/labs/lab-runner.js` mounts labs into a Shadow DOM host on `file://` or a sandboxed `srcdoc` iframe on HTTP/HTTPS.

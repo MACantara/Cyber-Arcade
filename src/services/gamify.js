@@ -45,26 +45,50 @@ function updateStreak(profile, { activity = false } = {}) {
   return profile
 }
 
-const BADGES = [
+const DOMAINS = window.CA?.DOMAINS || []
+
+const DOMAIN_BADGE_NAMES = {
+  web: { id: 'web-hunter', name: 'Web Hunter' },
+  network: { id: 'network-ninja', name: 'Network Ninja' },
+  crypto: { id: 'crypto-cracker', name: 'Crypto Cracker' }
+}
+
+const DOMAIN_BADGES = DOMAINS
+  .filter(d => d.id !== 'general')
+  .map(d => {
+    const preset = DOMAIN_BADGE_NAMES[d.id] || { id: `${d.id}-hunter`, name: `${d.label} Hunter` }
+    return {
+      id: preset.id,
+      name: preset.name,
+      description: `Complete 2 ${d.label} challenges.`,
+      domain: d.id,
+      check: (p) => (p[`${d.id}Count`] || 0) >= 2
+    }
+  })
+
+const GENERAL_BADGES = [
   { id: 'first-blood', name: 'First Blood', description: 'Complete your first challenge.', domain: 'general', check: (p) => p.completedCount >= 1 },
-  { id: 'web-hunter', name: 'Web Hunter', description: 'Complete 2 web challenges.', domain: 'web', check: (p) => p.webCount >= 2 },
-  { id: 'network-ninja', name: 'Network Ninja', description: 'Complete 2 network challenges.', domain: 'network', check: (p) => p.networkCount >= 2 },
-  { id: 'crypto-cracker', name: 'Crypto Cracker', description: 'Complete 2 crypto challenges.', domain: 'crypto', check: (p) => p.cryptoCount >= 2 },
   { id: 'perfect-score', name: 'Perfect Score', description: 'Complete a challenge with 100 points.', domain: 'general', check: (p) => p.hasPerfectScore },
   { id: 'streak-3', name: 'Three Day Streak', description: 'Keep a 3-day streak.', domain: 'general', check: (p) => p.streak >= 3 },
   { id: 'hint-master', name: 'Hint Master', description: 'Complete 5 challenges without hints.', domain: 'general', check: (p) => p.noHintCount >= 5 }
 ]
 
+const BADGES = [...GENERAL_BADGES, ...DOMAIN_BADGES]
+
 function checkBadges(progress, profile) {
-  const counts = { completedCount: 0, webCount: 0, networkCount: 0, cryptoCount: 0, hasPerfectScore: false, noHintCount: 0, streak: profile.streak || 0 }
+  const domainIds = (window.CA?.DOMAINS || []).map(d => d.id)
+  const counts = { completedCount: 0, hasPerfectScore: false, noHintCount: 0, streak: profile.streak || 0 }
+  for (const d of domainIds) {
+    counts[`${d}Count`] = 0
+  }
   for (const p of progress) {
     if (p.status !== 'completed') continue
     counts.completedCount++
     if (p.score === 100) counts.hasPerfectScore = true
     if (p.hintsUsed === 0) counts.noHintCount++
-    if (p.domain === 'web') counts.webCount++
-    if (p.domain === 'network') counts.networkCount++
-    if (p.domain === 'crypto') counts.cryptoCount++
+    if (domainIds.includes(p.domain)) {
+      counts[`${p.domain}Count`] = (counts[`${p.domain}Count`] || 0) + 1
+    }
   }
   return BADGES.filter(b => b.check(counts))
 }
