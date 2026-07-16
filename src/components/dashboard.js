@@ -1,5 +1,7 @@
-import { store } from '../services/store.js'
-import { registry } from '../modules/registry.js'
+(function () {
+
+const store = window.CA.services.store
+const registry = window.CA.registry
 
 class XDashboard extends HTMLElement {
   #unsubscribe = null
@@ -33,7 +35,7 @@ class XDashboard extends HTMLElement {
             <div class="card-header">Daily Challenge</div>
             ${daily ? `
               <p class="mb-4">${daily.title}</p>
-              <a href="/challenge/${daily.id}" class="btn btn-coin" data-router>Start Daily Challenge</a>
+              <a href="./challenge.html?id=${daily.id}" class="btn btn-coin">Start Daily Challenge</a>
             ` : '<p class="color-muted">No daily challenge available.</p>'}
           </div>
           <div class="card">
@@ -49,8 +51,8 @@ class XDashboard extends HTMLElement {
         </div>
 
         <div class="mt-8 text-center">
-          <a href="/learn" class="btn btn-primary" data-router>Browse All Challenges</a>
-          <a href="/profile" class="btn btn-ghost" data-router>View Profile</a>
+          <a href="./learn.html" class="btn btn-primary">Browse All Challenges</a>
+          <a href="./profile.html" class="btn btn-ghost">View Profile</a>
         </div>
       </section>
     `
@@ -75,3 +77,6 @@ class XDashboard extends HTMLElement {
 }
 
 customElements.define('x-dashboard', XDashboard)
+
+
+})()

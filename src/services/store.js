@@ -1,4 +1,6 @@
-export class Store {
+(function () {
+
+class Store {
   #state = {}
   #listeners = new Set()
 
@@ -51,4 +53,9 @@ export class Store {
   }
 }
 
-export const store = new Store()
+window.CA = window.CA || {}
+window.CA.services = window.CA.services || {}
+window.CA.services.store = new Store()
+
+
+})()

@@ -1,6 +1,8 @@
-import { store } from '../services/store.js'
-import { db } from '../services/db.js'
-import { toast } from './toast.js'
+(function () {
+
+const store = window.CA.services.store
+const db = window.CA.services.db
+const toast = window.CA.toast
 
 class XSettings extends HTMLElement {
   #unsubscribe = null
@@ -123,3 +125,6 @@ class XSettings extends HTMLElement {
 }
 
 customElements.define('x-settings', XSettings)
+
+
+})()

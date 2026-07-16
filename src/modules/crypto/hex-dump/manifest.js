@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'hex-dump',
   title: 'Hex Dump',
   domain: 'crypto',
@@ -14,4 +18,7 @@ export default {
   successCriteria: [
     'The decoded string is a flag in FLAG{...} format.'
   ]
-}
+})
+
+
+})()

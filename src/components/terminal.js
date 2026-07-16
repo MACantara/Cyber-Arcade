@@ -1,3 +1,5 @@
+(function () {
+
 class XTerminal extends HTMLElement {
   static get observedAttributes() { return ['lines'] }
 
@@ -36,3 +38,6 @@ class XTerminal extends HTMLElement {
 }
 
 customElements.define('x-terminal', XTerminal)
+
+
+})()

@@ -1,3 +1,5 @@
+(function () {
+
 const FLAG = 'FLAG{SQL1_1NJ3CT10N_8BIT}'
 
 function isCommentAttack(input) {
@@ -19,7 +21,9 @@ function isSqlInjection(username, password) {
     isTautology(password)
 }
 
-export default {
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['web/sqli-login'] = {
   mount(container, hooks) {
     container.style.fontFamily = "'VT323', monospace"
     container.style.fontSize = '1.25rem'
@@ -101,3 +105,6 @@ export default {
     return { submit: (payload) => { userField.input.value = payload != null ? payload : userField.input.value; check() } }
   }
 }
+
+
+})()

@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'port-knock',
   title: 'Port Knock',
   domain: 'network',
@@ -11,4 +15,7 @@ export default {
     'The admin note gives the order directly.'
   ],
   successCriteria: 'Knock the sequence 22, 80, 443, 8080 to open the door.'
-}
+})
+
+
+})()

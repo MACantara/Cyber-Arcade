@@ -1,8 +1,10 @@
-import { store } from '../services/store.js'
-import { registry } from '../modules/registry.js'
-import { startChallenge, completeChallenge, useHint } from '../services/progress.js'
-import { LabRunner } from '../labs/lab-runner.js'
-import { toast } from './toast.js'
+(function () {
+
+const store = window.CA.services.store
+const registry = window.CA.registry
+const { startChallenge, completeChallenge, useHint } = window.CA.services.progress
+const LabRunner = window.CA.LabRunner
+const toast = window.CA.toast
 
 class XChallenge extends HTMLElement {
   #unsubscribe = null
@@ -58,7 +60,7 @@ class XChallenge extends HTMLElement {
     const c = this.#challenge
     this.innerHTML = `
       <section class="page">
-        <a href="/learn" class="btn btn-ghost mb-4" data-router>← Back</a>
+        <a href="./learn.html" class="btn btn-ghost mb-4">← Back</a>
         <div class="flex items-center justify-between wrap gap-2 mb-4">
           <h1 class="text-2xl">${c.title}</h1>
           <span class="font-headline text-sm color-primary" id="challenge-status">IN PROGRESS</span>
@@ -151,10 +153,13 @@ class XChallenge extends HTMLElement {
       <section class="page page-center">
         <h1 class="text-2xl color-secondary">Mission not found</h1>
         <p>The challenge ID does not exist.</p>
-        <a href="/learn" class="btn btn-primary" data-router>Back to Learn</a>
+        <a href="./learn.html" class="btn btn-primary">Back to Learn</a>
       </section>
     `
   }
 }
 
 customElements.define('x-challenge', XChallenge)
+
+
+})()

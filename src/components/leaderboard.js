@@ -1,4 +1,6 @@
-import { store } from '../services/store.js'
+(function () {
+
+const store = window.CA.services.store
 
 class XLeaderboard extends HTMLElement {
   #unsubscribe = null
@@ -53,3 +55,6 @@ class XLeaderboard extends HTMLElement {
 }
 
 customElements.define('x-leaderboard', XLeaderboard)
+
+
+})()

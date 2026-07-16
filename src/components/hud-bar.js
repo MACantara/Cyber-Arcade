@@ -1,5 +1,7 @@
-import { store } from '../services/store.js'
-import { getLevelProgress } from '../services/gamify.js'
+(function () {
+
+const store = window.CA.services.store
+const { getLevelProgress } = window.CA.services.gamify
 
 class XHudBar extends HTMLElement {
   #unsubscribe = null
@@ -7,7 +9,7 @@ class XHudBar extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
       <header class="hud-bar">
-        <a href="/" class="hud-logo" data-router>Cyber-Arcade</a>
+        <a href="./index.html" class="hud-logo">Cyber-Arcade</a>
         <nav class="hud-stats" aria-label="Player stats">
           <div class="hud-stat">
             <span class="hud-stat-value" id="hud-level">1</span>
@@ -27,7 +29,7 @@ class XHudBar extends HTMLElement {
             <span class="hud-stat-value" id="hud-badges">0</span>
             <span class="hud-stat-label">BADGES</span>
           </div>
-          <a href="/settings" class="btn btn-ghost" data-router>⚙</a>
+          <a href="./settings.html" class="btn btn-ghost">⚙</a>
         </nav>
       </header>
     `
@@ -55,3 +57,6 @@ class XHudBar extends HTMLElement {
 }
 
 customElements.define('x-hud-bar', XHudBar)
+
+
+})()

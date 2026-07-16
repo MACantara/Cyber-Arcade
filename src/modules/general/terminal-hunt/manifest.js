@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'terminal-hunt',
   title: 'Terminal Hunt',
   domain: 'general',
@@ -15,4 +19,7 @@ export default {
   successCriteria: [
     'User reveals the flag from the fake filesystem.'
   ]
-}
+})
+
+
+})()

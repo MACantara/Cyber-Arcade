@@ -1,4 +1,6 @@
-import { getLevelProgress } from '../services/gamify.js'
+(function () {
+
+const { getLevelProgress } = window.CA.services.gamify
 
 class XXpBar extends HTMLElement {
   static get observedAttributes() { return ['xp'] }
@@ -27,3 +29,6 @@ class XXpBar extends HTMLElement {
 }
 
 customElements.define('x-xp-bar', XXpBar)
+
+
+})()

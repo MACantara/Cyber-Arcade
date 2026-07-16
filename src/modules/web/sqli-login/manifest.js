@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'sqli-login',
   title: 'SQL Injection Login',
   domain: 'web',
@@ -15,4 +19,7 @@ export default {
     'Username or password contains a SQL injection payload that comments out the password check, or',
     "Username or password makes the WHERE clause always true."
   ]
-}
+})
+
+
+})()

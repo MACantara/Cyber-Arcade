@@ -1,3 +1,5 @@
+(function () {
+
 const FLAG = 'FLAG{XSS_R3FL3CT3D_8BIT}'
 const WRONG_MSG = 'No script detected. Try a <script> tag or an onerror handler.'
 
@@ -19,7 +21,9 @@ function hasScript(payload) {
   return walk(doc.body)
 }
 
-export default {
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['web/xss-reflection'] = {
   mount(container, hooks) {
     const style = container.style
     style.fontFamily = "'VT323', monospace"
@@ -94,3 +98,6 @@ export default {
     return { submit: (payload) => { input.value = payload != null ? payload : input.value; check() } }
   }
 }
+
+
+})()

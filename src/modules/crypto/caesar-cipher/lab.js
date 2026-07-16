@@ -1,3 +1,5 @@
+(function () {
+
 const SHIFT = 7
 const PLAINTEXT = 'RETRO ARCADE'
 const CIPHERTEXT = 'YLAYV HYJHKL'
@@ -17,7 +19,9 @@ function createText(tag, text, styles = {}) {
   return el
 }
 
-export default {
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['crypto/caesar-cipher'] = {
   mount(container, hooks) {
     const s = container.style
     s.fontFamily = "'VT323', monospace"
@@ -106,3 +110,6 @@ export default {
     return { submit: (payload) => { input.value = payload != null ? payload : input.value; verify() } }
   }
 }
+
+
+})()

@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['general/recon-robot'] = {
   mount(container, hooks) {
     const style = document.createElement('style')
     style.textContent = `
@@ -103,3 +107,6 @@ export default {
     return { submit }
   }
 }
+
+
+})()

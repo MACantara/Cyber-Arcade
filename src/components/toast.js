@@ -1,3 +1,5 @@
+(function () {
+
 class XToast extends HTMLElement {
   connectedCallback() {
     this.className = 'toast'
@@ -20,8 +22,14 @@ class XToast extends HTMLElement {
 
 customElements.define('x-toast', XToast)
 
-export function toast(message, type) {
+function toast(message, type) {
   const el = document.querySelector('x-toast') || document.createElement('x-toast')
   if (!el.isConnected) document.body.appendChild(el)
   el.show(message, type)
 }
+
+window.CA = window.CA || {}
+window.CA.toast = toast
+
+
+})()

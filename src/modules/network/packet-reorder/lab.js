@@ -1,3 +1,5 @@
+(function () {
+
 const PALETTE = {
   bg: '#0b0c15',
   surface: '#151725',
@@ -50,7 +52,9 @@ function shuffle(arr) {
   return copy
 }
 
-export default {
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['network/packet-reorder'] = {
   mount(container, hooks) {
     const doc = container.ownerDocument
     const style = doc.createElement('style')
@@ -149,3 +153,6 @@ export default {
     return { submit() {} }
   }
 }
+
+
+})()

@@ -1,15 +1,21 @@
-const SANDBOX_HTML = `<!DOCTYPE html>
+(function () {
+
+function buildSandboxSrcdoc(challenge) {
+  const labPath = `./src/modules/${challenge.domain}/${challenge.id}/lab.js`
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="/src/labs/sandbox.css">
-  <script src="/src/labs/sandbox-runtime.js" type="module"><\/script>
+  <link rel="stylesheet" href="./src/labs/sandbox.css">
+  <script src="${labPath}"><\/script>
+  <script src="./src/labs/sandbox-runtime.js"><\/script>
 </head>
 <body style="margin:0;background:var(--color-bg,#0b0c15);color:var(--color-white,#f0f0f0);font-family:monospace;">
 </body>
 </html>`
+}
 
-export class LabRunner {
+class LabRunner {
   #iframe = null
   #parentOrigin = null
   #ready = false
@@ -28,7 +34,7 @@ export class LabRunner {
     this.#iframe.className = 'lab-screen'
     this.#iframe.setAttribute('sandbox', 'allow-scripts')
     this.#iframe.setAttribute('title', `Lab: ${this.challenge.title}`)
-    this.#iframe.srcdoc = SANDBOX_HTML
+    this.#iframe.srcdoc = buildSandboxSrcdoc(this.challenge)
     this.container.innerHTML = ''
     this.container.appendChild(this.#iframe)
 
@@ -72,3 +78,9 @@ export class LabRunner {
     this.#iframe.contentWindow.postMessage({ type, data }, '*')
   }
 }
+
+window.CA = window.CA || {}
+window.CA.LabRunner = LabRunner
+
+
+})()

@@ -1,4 +1,6 @@
-import { LabRunner } from '../labs/lab-runner.js'
+(function () {
+
+const LabRunner = window.CA.LabRunner
 
 class XLabFrame extends HTMLElement {
   static get observedAttributes() { return ['challenge-id'] }
@@ -32,3 +34,6 @@ class XLabFrame extends HTMLElement {
 }
 
 customElements.define('x-lab-frame', XLabFrame)
+
+
+})()

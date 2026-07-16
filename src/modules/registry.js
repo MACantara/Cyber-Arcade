@@ -1,14 +1,14 @@
-import { web } from './web/index.js'
-import { network } from './network/index.js'
-import { crypto } from './crypto/index.js'
-import { general } from './general/index.js'
-import fallbackManifest from './fallback/manifest.js'
+(function () {
 
-const all = [...web, ...network, ...crypto, ...general, fallbackManifest]
+const all = window.CA && window.CA.CHALLENGE_MANIFESTS ? window.CA.CHALLENGE_MANIFESTS : []
 const byId = new Map(all.map(c => [c.id, c]))
 
-export const registry = {
+window.CA = window.CA || {}
+window.CA.registry = {
   getAll: () => all,
   getById: (id) => byId.get(id),
   byDomain: (domain) => all.filter(c => c.domain === domain)
 }
+
+
+})()

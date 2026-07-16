@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'welcome',
   title: 'Welcome to the Arcade',
   domain: 'general',
@@ -14,4 +18,7 @@ export default {
   successCriteria: [
     'User enters the correct flag.'
   ]
-}
+})
+
+
+})()

@@ -1,4 +1,12 @@
-const parentOrigin = document.referrer ? new URL(document.referrer).origin : '*'
+(function () {
+
+let parentOrigin = '*'
+if (document.referrer) {
+  try {
+    const origin = new URL(document.referrer).origin
+    parentOrigin = (origin && origin !== 'null') ? origin : '*'
+  } catch {}
+}
 
 let controller = null
 
@@ -10,9 +18,14 @@ window.addEventListener('message', async (event) => {
 
   if (type === 'init') {
     const { challenge } = data
+    const key = challenge.domain + '/' + challenge.id
+    const lab = window.CA && window.CA.labs && window.CA.labs[key]
+    if (!lab || typeof lab.mount !== 'function') {
+      console.error('Lab not found:', key)
+      send('fail', { message: 'Failed to load lab.' })
+      return
+    }
     try {
-      const mod = await import(`../modules/${challenge.domain}/${challenge.id}/lab.js`)
-      const lab = mod.default || mod
       controller = lab.mount(document.body, {
         onComplete: (detail) => send('complete', detail),
         onFail: (detail) => send('fail', detail),
@@ -32,3 +45,6 @@ function send(type, data) {
 }
 
 send('ready', {})
+
+
+})()

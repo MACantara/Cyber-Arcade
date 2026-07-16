@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'caesar-cipher',
   title: 'Caesar Cipher',
   domain: 'crypto',
@@ -14,4 +18,7 @@ export default {
   successCriteria: [
     'Enter the correct plaintext: RETRO ARCADE.'
   ]
-}
+})
+
+
+})()

@@ -1,5 +1,7 @@
-import { store } from '../services/store.js'
-import { BADGES } from '../services/gamify.js'
+(function () {
+
+const store = window.CA.services.store
+const BADGES = window.CA.services.gamify.BADGES
 
 class XBadgeCase extends HTMLElement {
   #unsubscribe = null
@@ -29,3 +31,6 @@ class XBadgeCase extends HTMLElement {
 }
 
 customElements.define('x-badge-case', XBadgeCase)
+
+
+})()

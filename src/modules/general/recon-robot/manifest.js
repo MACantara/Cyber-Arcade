@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'recon-robot',
   title: 'Recon Robot',
   domain: 'general',
@@ -15,4 +19,7 @@ export default {
   successCriteria: [
     'User identifies and submits the flag from the disallowed path.'
   ]
-}
+})
+
+
+})()

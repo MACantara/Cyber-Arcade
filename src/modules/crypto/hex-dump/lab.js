@@ -1,3 +1,5 @@
+(function () {
+
 const MESSAGE = 'FLAG{HEX_DUMP_8BIT}'
 const HEX = MESSAGE.split('').map((ch) => ch.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')).join(' ')
 
@@ -8,7 +10,9 @@ function createText(tag, text, styles = {}) {
   return el
 }
 
-export default {
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['crypto/hex-dump'] = {
   mount(container, hooks) {
     const s = container.style
     s.fontFamily = "'VT323', monospace"
@@ -101,3 +105,6 @@ export default {
     return { submit: (payload) => { if (payload != null) input.value = payload; verify() } }
   }
 }
+
+
+})()

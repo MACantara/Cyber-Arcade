@@ -1,6 +1,10 @@
+(function () {
+
 const FLAG = 'FLAG{W3LC0M3_T0_CY83R_ARC4D3}'
 
-export default {
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['general/welcome'] = {
   mount(container, hooks) {
     container.style.cssText = 'background:#0b0c15; color:#00ff9d; font-family:VT323,monospace; padding:1rem; min-height:100%; box-sizing:border-box;'
 
@@ -43,3 +47,6 @@ export default {
     return { submit: check }
   }
 }
+
+
+})()

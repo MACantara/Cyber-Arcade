@@ -1,3 +1,5 @@
+(function () {
+
 const PALETTE = {
   bg: '#0b0c15',
   surface: '#151725',
@@ -14,7 +16,9 @@ function setStyle(el, styles) {
   Object.assign(el.style, styles)
 }
 
-export default {
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['network/port-knock'] = {
   mount(container, hooks) {
     const doc = container.ownerDocument
     const style = doc.createElement('style')
@@ -132,3 +136,6 @@ export default {
     return { submit() {} }
   }
 }
+
+
+})()

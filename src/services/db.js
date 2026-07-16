@@ -1,3 +1,5 @@
+(function () {
+
 const DB_NAME = 'cyber-arcade'
 const DB_VERSION = 1
 
@@ -115,4 +117,9 @@ class Database {
   }
 }
 
-export const db = new Database()
+window.CA = window.CA || {}
+window.CA.services = window.CA.services || {}
+window.CA.services.db = new Database()
+
+
+})()

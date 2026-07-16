@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'packet-reorder',
   title: 'Packet Reorder',
   domain: 'network',
@@ -11,4 +15,7 @@ export default {
     "The first packet payload starts with 'FLAG'."
   ],
   successCriteria: 'Reassemble all four packets to read the full flag.'
-}
+})
+
+
+})()

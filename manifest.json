@@ -1,7 +1,7 @@
 {
   "name": "Cyber-Arcade",
   "short_name": "CyberArcade",
-  "start_url": "/",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0b0c15",
   "theme_color": "#0b0c15",

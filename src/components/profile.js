@@ -1,5 +1,7 @@
-import { store } from '../services/store.js'
-import { registry } from '../modules/registry.js'
+(function () {
+
+const store = window.CA.services.store
+const registry = window.CA.registry
 
 class XProfile extends HTMLElement {
   #unsubscribe = null
@@ -69,3 +71,6 @@ class XProfile extends HTMLElement {
 }
 
 customElements.define('x-profile', XProfile)
+
+
+})()

@@ -1,3 +1,5 @@
+(function () {
+
 const CACHE_NAME = 'cyber-arcade-v2'
 const PRECACHE = [
   '/',
@@ -94,3 +96,6 @@ self.addEventListener('fetch', (event) => {
     })
   )
 })
+
+
+})()

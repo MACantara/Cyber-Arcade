@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.labs = window.CA.labs || {}
+window.CA.labs['general/terminal-hunt'] = {
   mount(container, hooks) {
     const style = document.createElement('style')
     style.textContent = `
@@ -153,3 +157,6 @@ export default {
     return { submit: (payload) => handleCommand(typeof payload === 'string' ? payload : '') }
   }
 }
+
+
+})()

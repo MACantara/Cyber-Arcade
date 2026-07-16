@@ -1,5 +1,7 @@
-import { store } from '../services/store.js'
-import { registry } from '../modules/registry.js'
+(function () {
+
+const store = window.CA.services.store
+const registry = window.CA.registry
 
 const DOMAINS = [
   { id: 'web', label: 'Web App Security', color: 'var(--color-primary)' },
@@ -58,3 +60,6 @@ class XLearn extends HTMLElement {
 }
 
 customElements.define('x-learn', XLearn)
+
+
+})()

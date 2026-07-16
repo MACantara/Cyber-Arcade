@@ -1,4 +1,8 @@
-export default {
+(function () {
+
+window.CA = window.CA || {}
+window.CA.CHALLENGE_MANIFESTS = window.CA.CHALLENGE_MANIFESTS || []
+window.CA.CHALLENGE_MANIFESTS.push({
   id: 'xss-reflection',
   title: 'Reflected XSS',
   domain: 'web',
@@ -15,4 +19,7 @@ export default {
     'Payload contains a <script> tag, or',
     'Payload contains an HTML event handler such as onerror.'
   ]
-}
+})
+
+
+})()

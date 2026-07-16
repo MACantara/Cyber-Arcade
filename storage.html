@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>storage</title>
+  <script src="./src/global.js"></script>
+  <script src="./src/services/db.js"></script>
+</head>
+<body>
+  <script>
+    (function () {
+      const db = window.CA && window.CA.services && window.CA.services.db
+      if (!db) {
+        window.parent.postMessage({ type: 'storage-error', error: 'Database not loaded' }, '*')
+        return
+      }
+
+      db.open().then(() => {
+        window.parent.postMessage({ type: 'storage-ready' }, '*')
+      }).catch(err => {
+        window.parent.postMessage({ type: 'storage-error', error: err.message || String(err) }, '*')
+      })
+
+      window.addEventListener('message', async (event) => {
+        const { id, method, args } = event.data || {}
+        if (!id || !method) return
+        try {
+          let result
+          switch (method) {
+            case 'open': result = await db.open(); break
+            case 'get': result = await db.get(...args); break
+            case 'put': result = await db.put(...args); break
+            case 'delete': result = await db.delete(...args); break
+            case 'getAll': result = await db.getAll(...args); break
+            case 'clear': result = await db.clear(...args); break
+            case 'exportProfile': result = await db.exportProfile(); break
+            case 'importProfile': result = await db.importProfile(...args); break
+            default: throw new Error('Unknown method: ' + method)
+          }
+          event.source.postMessage({ id, result }, '*')
+        } catch (err) {
+          event.source.postMessage({ id, error: err.message || String(err) }, '*')
+        }
+      })
+    })()
+  </script>
+</body>
+</html>
