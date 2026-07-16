@@ -3,8 +3,32 @@
   CA.services = CA.services || {}
 
   const PREFIX = 'CA::'
+  const STORAGE_KEY = 'CA::data'
+
+  const backend = (() => {
+    if (window.location.protocol === 'file:') return null
+    if (typeof localStorage === 'undefined') return null
+    try {
+      localStorage.setItem('__ca_test__', '1')
+      localStorage.removeItem('__ca_test__')
+      return {
+        load() {
+          const raw = localStorage.getItem(STORAGE_KEY)
+          if (raw) {
+            try { return JSON.parse(raw) || {} } catch {}
+          }
+          return {}
+        },
+        save(data) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+        }
+      }
+    } catch {}
+    return null
+  })()
 
   function load() {
+    if (backend) return backend.load()
     const raw = window.name || ''
     if (raw.startsWith(PREFIX)) {
       try {
@@ -15,7 +39,8 @@
   }
 
   function save(data) {
-    window.name = PREFIX + JSON.stringify(data)
+    if (backend) backend.save(data)
+    else window.name = PREFIX + JSON.stringify(data)
   }
 
   function getStore(data, store) {
