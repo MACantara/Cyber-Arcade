@@ -2,6 +2,7 @@
 
 const store = window.CA.services.store
 const registry = window.CA.registry
+const { getChallengeStatus, getChallengeLockReason } = window.CA.services.progress
 
 const DOMAINS = [
   { id: 'web', label: 'Web App Security', color: 'var(--color-primary)' },
@@ -35,8 +36,9 @@ class XLearn extends HTMLElement {
     const progress = state.progress || new Map()
     const challenges = registry.getAll().filter(c => this.#filter === 'all' || c.domain === this.#filter)
     const enriched = challenges.map(c => {
-      const p = progress.get(c.id)
-      return { ...c, status: p?.status || 'available' }
+      const status = getChallengeStatus(c, progress)
+      const lockReason = status === 'locked' ? getChallengeLockReason(c, progress) : ''
+      return { ...c, status, lockReason }
     })
 
     this.innerHTML = `

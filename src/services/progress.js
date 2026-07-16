@@ -118,6 +118,23 @@ async function loadDaily(challenges) {
   return settings.dailyChallengeId
 }
 
+function getChallengeStatus(challenge, progressMap) {
+  const prerequisites = challenge.prerequisites || []
+  if (prerequisites.length) {
+    const locked = prerequisites.some(id => progressMap?.get(id)?.status !== 'completed')
+    if (locked) return 'locked'
+  }
+  return progressMap?.get(challenge.id)?.status || 'available'
+}
+
+function getChallengeLockReason(challenge, progressMap) {
+  const registry = window.CA?.registry
+  const missing = (challenge.prerequisites || []).filter(id => progressMap?.get(id)?.status !== 'completed')
+  if (!missing.length) return ''
+  const names = missing.map(id => registry?.getById(id)?.title || id)
+  return `Complete ${names.join(', ')} first.`
+}
+
 window.CA = window.CA || {}
 window.CA.services = window.CA.services || {}
 window.CA.services.progress = {
@@ -128,7 +145,9 @@ window.CA.services.progress = {
   startChallenge,
   completeChallenge,
   useHint,
-  loadDaily
+  loadDaily,
+  getChallengeStatus,
+  getChallengeLockReason
 }
 
 

@@ -77,6 +77,7 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 - Clamp the description paragraph to three lines with `line-clamp` so long text never breaks the card height.
 - Hover lifts card and brightens border.
 - Header uses pixel font and uppercase.
+- Status labels are `AVAILABLE` (playable), `IN PROGRESS`, `COMPLETED`, or `LOCKED` (only when prerequisites are not met). A locked card shows a disabled lock button with a tooltip naming the required missions.
 
 ### Input
 - Monospace terminal font.

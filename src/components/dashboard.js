@@ -2,6 +2,7 @@
 
 const store = window.CA.services.store
 const registry = window.CA.registry
+const { getChallengeStatus, getChallengeLockReason } = window.CA.services.progress
 
 class XDashboard extends HTMLElement {
   #unsubscribe = null
@@ -60,8 +61,8 @@ class XDashboard extends HTMLElement {
 
   #continueCards(progress) {
     const inProgress = registry.getAll().filter(c => {
-      const p = progress.get(c.id)
-      return p?.status === 'started' || (!p && c.difficulty === 'beginner')
+      const status = getChallengeStatus(c, progress)
+      return status === 'started' || (status === 'available' && c.difficulty === 'beginner')
     }).slice(0, 3)
 
     if (inProgress.length === 0) {
@@ -69,9 +70,9 @@ class XDashboard extends HTMLElement {
     }
 
     return inProgress.map(c => {
-      const p = progress.get(c.id)
-      const status = p?.status || 'available'
-      return `<x-challenge-card data="${JSON.stringify({ ...c, status }).replace(/"/g, '&quot;')}"></x-challenge-card>`
+      const status = getChallengeStatus(c, progress)
+      const lockReason = status === 'locked' ? getChallengeLockReason(c, progress) : ''
+      return `<x-challenge-card data="${JSON.stringify({ ...c, status, lockReason }).replace(/"/g, '&quot;')}"></x-challenge-card>`
     }).join('')
   }
 }
