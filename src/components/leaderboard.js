@@ -25,7 +25,7 @@ class XLeaderboard extends HTMLElement {
         <h1 class="text-2xl mb-2">Leaderboard</h1>
         <p class="subtitle mb-6">Local heroes only. No backend required.</p>
 
-        <div class="card">
+        <div class="card table-scroll">
           <table class="leaderboard-table font-terminal">
             <thead>
               <tr>

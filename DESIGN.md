@@ -141,7 +141,13 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 
 ## Responsive
 
-- Mobile-first.
-- Breakpoints: `480px`, `768px`, `1024px`, `1440px`.
-- HUD collapses into a hamburger menu on narrow screens.
-- Cards stack in a single column on mobile.
+- Mobile-first: base styles target narrow viewports and breakpoints use `min-width` to scale up.
+- Breakpoints: `480px`, `640px`, `768px`, `1024px`, `1440px`.
+- HUD wraps and hides stat labels on very narrow screens; navigation collapses into a hamburger menu.
+- Cards stack in a single column on mobile; the learn grid moves from 1 → 2 → 3 columns as width allows.
+- `.grid-2`, `.grid-3`, and `.grid-4` default to a single column and expand to their target columns at `768px` and `1024px`.
+- The leaderboard table is wrapped in a scrollable container so wide tables stay usable on small screens.
+- Lab frame height shrinks from `300px` on mobile to `400px` on larger screens.
+- Toast notifications stretch full-width on mobile and become a fixed-width panel on wider screens.
+- Typography scales down on mobile and up at `768px` to keep headings readable without overflow.
+- Main content padding is reduced on mobile and restored on larger screens.

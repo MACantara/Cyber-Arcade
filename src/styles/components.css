@@ -51,13 +51,20 @@
     background-color: var(--color-surface);
     border: 2px solid var(--color-gray-300);
     box-shadow: var(--shadow);
-    padding: var(--space-4);
-    min-height: 260px;
+    padding: var(--space-3);
+    min-height: 240px;
     max-height: 320px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+  }
+
+  @media (min-width: 768px) {
+    .card {
+      padding: var(--space-4);
+      min-height: 260px;
+    }
   }
 
   .card p {
@@ -131,25 +138,36 @@
   .grid {
     display: grid;
     gap: var(--space-4);
-    grid-template-columns: repeat(auto-fit, minmax(max(280px, calc((100% - 2 * var(--space-4)) / 3)), 1fr));
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
   }
 
   .grid-2 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .grid-3 {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .grid-4 {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr;
   }
 
-  @media (max-width: 768px) {
-    .grid-2, .grid-3, .grid-4 {
-      grid-template-columns: 1fr;
-    }
+  @media (min-width: 768px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
   }
 
   .terminal {
@@ -167,15 +185,24 @@
     background: linear-gradient(180deg, var(--color-surface-alt) 0%, var(--color-black) 100%);
     border: 4px solid var(--color-gray-300);
     border-radius: var(--radius);
-    padding: var(--space-4);
+    padding: var(--space-2);
     box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 15px var(--color-tertiary);
   }
 
   .lab-screen {
     width: 100%;
-    height: 400px;
+    height: 300px;
     background-color: var(--color-black);
     border: 2px solid var(--color-gray-300);
+  }
+
+  @media (min-width: 768px) {
+    .lab-bezel {
+      padding: var(--space-4);
+    }
+    .lab-screen {
+      height: 400px;
+    }
   }
 
   .scanlines {
@@ -200,19 +227,21 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    height: var(--header-height);
+    min-height: var(--header-height);
     background-color: var(--color-surface);
     border-bottom: 4px solid var(--color-gray-300);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 var(--space-4);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
     box-shadow: 0 4px 0 var(--color-black);
   }
 
   .hud-logo {
     font-family: var(--font-headline);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--color-primary);
     text-shadow: 0 0 8px var(--color-primary);
   }
@@ -220,9 +249,22 @@
   .hud-stats {
     display: flex;
     align-items: center;
-    gap: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-2);
     font-family: var(--font-headline);
     font-size: var(--text-xs);
+  }
+
+  @media (min-width: 768px) {
+    .hud-bar {
+      padding: 0 var(--space-4);
+    }
+    .hud-logo {
+      font-size: var(--text-sm);
+    }
+    .hud-stats {
+      gap: var(--space-6);
+    }
   }
 
   .hud-stat {
@@ -237,8 +279,15 @@
   }
 
   .hud-stat-label {
+    display: none;
     color: var(--color-gray-200);
     font-size: var(--text-xs);
+  }
+
+  @media (min-width: 480px) {
+    .hud-stat-label {
+      display: block;
+    }
   }
 
   .hud-actions {
@@ -253,6 +302,8 @@
     top: calc(100% + 4px);
     right: 0;
     min-width: 180px;
+    width: max-content;
+    max-width: calc(100vw - var(--space-4) * 2);
     background-color: var(--color-surface);
     border: 2px solid var(--color-gray-300);
     box-shadow: var(--shadow);
@@ -312,24 +363,39 @@
 
   .toast {
     position: fixed;
-    bottom: var(--space-6);
-    right: var(--space-6);
+    bottom: var(--space-2);
+    right: var(--space-2);
+    left: var(--space-2);
     z-index: 200;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
     pointer-events: none;
+    max-width: calc(100vw - var(--space-4));
   }
 
   .toast-item {
     background-color: var(--color-surface);
     border: 2px solid var(--color-primary);
     box-shadow: var(--shadow);
-    padding: var(--space-4);
+    padding: var(--space-3);
     font-family: var(--font-headline);
     font-size: var(--text-xs);
     pointer-events: auto;
     animation: slide-up 0.3s ease;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .toast {
+      bottom: var(--space-6);
+      right: var(--space-6);
+      left: auto;
+      max-width: 420px;
+    }
+    .toast-item {
+      padding: var(--space-4);
+    }
   }
 
   .lucide {
@@ -380,7 +446,7 @@
   .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
   }
   .leaderboard-table thead tr {
     border-bottom: 2px solid var(--color-gray-300);
@@ -389,10 +455,28 @@
   .leaderboard-table td {
     text-align: left;
     padding: var(--space-2);
+    white-space: nowrap;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (min-width: 768px) {
+    .leaderboard-table {
+      font-size: var(--text-lg);
+    }
   }
 
   .hud-stat-xp {
-    min-width: 120px;
+    min-width: 80px;
+  }
+
+  @media (min-width: 768px) {
+    .hud-stat-xp {
+      min-width: 120px;
+    }
   }
 
   .toast-success { border-color: var(--color-primary); }
