@@ -26,7 +26,7 @@ class XLeaderboard extends HTMLElement {
         <p class="subtitle mb-6">Local heroes only. No backend required.</p>
 
         <div class="card">
-          <table class="font-terminal" style="width:100%; border-collapse: collapse;">
+          <table class="font-terminal" style="width:100%; border-collapse: collapse; font-size: var(--text-lg);">
             <thead>
               <tr style="border-bottom: 2px solid var(--color-gray-300);">
                 <th style="text-align:left; padding: var(--space-2);">Rank</th>
