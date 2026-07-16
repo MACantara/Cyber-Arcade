@@ -25,6 +25,9 @@ class XDashboard extends HTMLElement {
     const total = registry.getAll().length
     const dailyId = state.dailyChallengeId
     const daily = dailyId ? registry.getById(dailyId) : null
+    const dailyStatus = daily ? getChallengeStatus(daily, progress) : 'available'
+    const dailyCompleted = dailyStatus === 'completed'
+    const dailyStarted = dailyStatus === 'started'
 
     this.innerHTML = `
       <section class="page">
@@ -36,7 +39,9 @@ class XDashboard extends HTMLElement {
             <div class="card-header">Daily Challenge</div>
             ${daily ? `
               <p class="mb-4">${daily.title}</p>
-              <a href="./challenge.html?id=${daily.id}" class="btn btn-coin">Start Daily Challenge</a>
+              ${dailyCompleted
+                ? '<p class="font-headline text-sm color-primary">Daily Challenge Completed</p>'
+                : `<a href="./challenge.html?id=${daily.id}" class="btn btn-coin">${dailyStarted ? 'Continue Daily Challenge' : 'Start Daily Challenge'}</a>`}
             ` : '<p class="color-muted">No daily challenge available.</p>'}
           </div>
           <div class="card">
