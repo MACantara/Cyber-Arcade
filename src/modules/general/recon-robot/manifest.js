@@ -1,0 +1,18 @@
+export default {
+  id: 'recon-robot',
+  title: 'Recon Robot',
+  domain: 'general',
+  difficulty: 'beginner',
+  description: 'Inspect a fake robots.txt file to find the disallowed path that contains the flag, then enter it.',
+  xp: 100,
+  prerequisites: [],
+  objective: 'Inspect robots.txt and enter the flag hidden in a disallowed path.',
+  hints: [
+    "Look for lines that start with 'Disallow:'.",
+    'One of the disallowed paths is the flag itself.',
+    'Flags are wrapped in FLAG{...}.'
+  ],
+  successCriteria: [
+    'User identifies and submits the flag from the disallowed path.'
+  ]
+}

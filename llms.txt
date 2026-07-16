@@ -1,0 +1,57 @@
+# llms.txt — Cyber-Arcade
+
+> A static, gamified cyber-security learning PWA with no backend.
+
+## Summary
+- **Name:** Cyber-Arcade
+- **Type:** Single-page static PWA
+- **Stack:** Modern HTML, modern CSS, modern JavaScript (vanilla ES modules)
+- **Storage:** IndexedDB
+- **Theme:** Retro 8-bit arcade cabinet
+- **Deployment:** GitHub Pages / any static CDN
+- **Repo root:** `C:\Projects\Devin-Agent-Test`
+
+## Architecture
+- `index.html` bootstraps the app and loads `src/main.js` as an ES module.
+- `src/app.js` orchestrates state, routing, and rendering.
+- `src/router.js` maps paths to views using `history.pushState` and dispatches custom events.
+- `src/services/db.js` wraps IndexedDB for profiles, progress, badges, and settings.
+- `src/services/store.js` is a tiny reactive store that components subscribe to.
+- `src/services/progress.js` reads/writes challenge completion.
+- `src/services/gamify.js` computes XP, levels, streaks, badges, and daily challenges.
+- `src/components/` contains Web Components (vanilla custom elements).
+- `src/labs/` contains the `LabRunner` and safe `postMessage` protocol.
+- `src/modules/<domain>/<challenge>/` contains challenge manifests and lab code.
+- `src/sw.js` caches assets for offline use.
+- `manifest.json` makes the app installable.
+
+## Technologies
+- HTML5: semantic elements, `<dialog>`, `<details>`, `<template>`, `<canvas>`, `<iframe sandbox>`.
+- CSS: custom properties, `@layer`, `@property`, container queries, subgrid, view transitions, `color-mix`, `oklch`, `prefers-reduced-motion`.
+- JS: ES modules, private fields, top-level await, `async/await`, `structuredClone`, `BroadcastChannel`, `AbortController`, `ResizeObserver`, `IntersectionObserver`, `Web Animations API`, `Canvas 2D`.
+- APIs: IndexedDB, Service Worker, Cache Storage, Web Crypto.
+
+## Entry points
+- App: `index.html`
+- Script: `src/main.js`
+- Worker: `src/sw.js`
+- Manifest: `manifest.json`
+
+## Documentation index
+- `AGENTS.md` — agent conventions, quick start, build/deploy, security rules.
+- `DESIGN.md` — design system (colors, typography, spacing, components, animation).
+- `ARCHITECTURE.md` — system design, module layout, data flow.
+- `DATABASE.md` — IndexedDB schema, stores, indexes, migrations.
+- `STYLEGUIDE.md` — naming, formatting, code conventions.
+- `SECURITY.md` — threat model, sandbox, CSP, no-eval policy.
+- `TESTING.md` — testing strategy, verification checklist.
+- `PROMPTS.md` — reusable prompts and agent workflows.
+- `MEMORY.md` — long-term context, recurring decisions, unresolved issues.
+- `ROADMAP.md` — planned features and milestones.
+- `DECISIONS.md` — architecture decision records.
+- `API.md` — client-only API (no backend endpoints).
+- `CONTRIBUTING.md` — workflow for human contributors.
+- `README.md` — human-facing quick start and project description.
+
+## For agents
+Before writing code, read `AGENTS.md` and `DESIGN.md`. Add new modules under `src/modules/<domain>/<challenge>/` and register them in `src/modules/<domain>/index.js`. Keep all challenge code free of `eval` and user-supplied script execution.
