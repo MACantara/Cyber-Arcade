@@ -29,6 +29,7 @@ class XHudBar extends HTMLElement {
             <span class="hud-stat-value" id="hud-badges">0</span>
             <span class="hud-stat-label">BADGES</span>
           </div>
+          <a href="./profile.html" class="btn btn-ghost" aria-label="Profile"><i data-lucide="user" aria-hidden="true"></i></a>
           <a href="./settings.html" class="btn btn-ghost" aria-label="Settings"><i data-lucide="settings" aria-hidden="true"></i></a>
         </nav>
       </header>
