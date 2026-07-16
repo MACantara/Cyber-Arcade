@@ -20,6 +20,12 @@
   --font-body: 'Inter', system-ui, sans-serif;
   --font-terminal: 'VT323', monospace;
 
+  --font-weight-headline: 400;
+  --font-weight-terminal: 400;
+  --font-weight-body: 400;
+  --font-weight-body-strong: 600;
+  --font-weight-bold: 700;
+
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
