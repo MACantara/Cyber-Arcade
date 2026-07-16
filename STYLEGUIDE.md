@@ -39,6 +39,8 @@
 - Use custom properties for all colors, spacing, and font weights.
 - Always set `font-weight` when using `Press Start 2P` or `VT323` (both are single-weight fonts). Use `--font-weight-headline` and `--font-weight-terminal`.
 - Use `--font-weight-body` for body text, `--font-weight-body-strong` for emphasized labels, and `--font-weight-bold` for `b`/`strong` in `Inter`.
+- Maintain strong contrast: near-white text (`#f7f8fa`) on deep space background (`#070914`), with lightened grays (`#e4e8ef`, `#a2abc0`) for secondary text.
+- Body text uses `--text-base` (1rem / 16px); the type scale ranges from `--text-xs` (0.75rem) to `--text-3xl` (3.25rem).
 - Cards use a fixed size range (`min-height: 260px`, `max-height: 320px`) and clamp the description to three lines so the grid stays uniform.
 - Respect `prefers-reduced-motion`.
 

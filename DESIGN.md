@@ -6,19 +6,19 @@ A retro 8-bit arcade learning platform. It should feel like a neon arcade cabine
 ## Colors
 
 ### Primary palette
-- `--color-bg`: `#0b0c15` near-black deep space
-- `--color-surface`: `#151725` raised panel
-- `--color-surface-alt`: `#1e2132` alternate panel
+- `--color-bg`: `#070914` near-black deep space
+- `--color-surface`: `#101220` raised panel
+- `--color-surface-alt`: `#181b2b` alternate panel
 - `--color-primary`: `#00ff9d` neon green (XP, success, highlights)
 - `--color-secondary`: `#ff0055` neon magenta (danger, enemies, warnings)
 - `--color-tertiary`: `#00ccff` neon cyan (info, links, accents)
 - `--color-quaternary`: `#ffcc00` neon yellow (gold, badges, coins)
 
 ### Neutrals
-- `--color-white`: `#f0f0f0`
-- `--color-gray-100`: `#c0c5ce`
-- `--color-gray-200`: `#7a8194`
-- `--color-gray-300`: `#4a5068`
+- `--color-white`: `#f7f8fa`
+- `--color-gray-100`: `#e4e8ef`
+- `--color-gray-200`: `#a2abc0`
+- `--color-gray-300`: `#5d657b`
 - `--color-black`: `#05060a`
 
 ### Semantic colors
@@ -34,14 +34,14 @@ A retro 8-bit arcade learning platform. It should feel like a neon arcade cabine
 - Monospace/terminal: `'VT323'`, fallback `monospace`.
 
 ### Type scale
-- `--text-xs`: 0.625rem (10px)
-- `--text-sm`: 0.75rem (12px)
-- `--text-base`: 0.875rem (14px)
-- `--text-md`: 1rem (16px)
-- `--text-lg`: 1.25rem (20px)
-- `--text-xl`: 1.5rem (24px)
-- `--text-2xl`: 2rem (32px)
-- `--text-3xl`: 3rem (48px)
+- `--text-xs`: 0.75rem (12px)
+- `--text-sm`: 0.875rem (14px)
+- `--text-base`: 1rem (16px)
+- `--text-md`: 1.125rem (18px)
+- `--text-lg`: 1.375rem (22px)
+- `--text-xl`: 1.75rem (28px)
+- `--text-2xl`: 2.25rem (36px)
+- `--text-3xl`: 3.25rem (52px)
 
 Headlines use `line-height: 1.2` and `text-transform: uppercase`. Body uses `line-height: 1.6`. Pixel font uses `letter-spacing: 0.08em`.
 
