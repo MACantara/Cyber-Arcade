@@ -2,63 +2,115 @@
   const CA = window.CA || (window.CA = {})
   CA.services = CA.services || {}
 
-  let iframe = document.getElementById('storage-frame')
-  if (!iframe) {
-    iframe = document.createElement('iframe')
-    iframe.id = 'storage-frame'
-    iframe.src = './storage.html'
-    iframe.style.display = 'none'
-    if (document.body) {
-      document.body.appendChild(iframe)
-    } else {
-      window.addEventListener('DOMContentLoaded', () => document.body.appendChild(iframe))
+  const PREFIX = 'CA::'
+
+  function load() {
+    const raw = window.name || ''
+    if (raw.startsWith(PREFIX)) {
+      try {
+        return JSON.parse(raw.slice(PREFIX.length)) || {}
+      } catch (e) {}
     }
+    return {}
   }
 
-  let readyResolve
-  let readyReject
-  const readyPromise = new Promise((resolve, reject) => {
-    readyResolve = resolve
-    readyReject = reject
-  })
+  function save(data) {
+    window.name = PREFIX + JSON.stringify(data)
+  }
 
-  const pending = new Map()
-  let msgId = 0
+  function getStore(data, store) {
+    if (!data[store]) data[store] = {}
+    return data[store]
+  }
 
-  window.addEventListener('message', (event) => {
-    if (event.source !== iframe.contentWindow) return
-    const data = event.data || {}
-    if (data.type === 'storage-ready') {
-      if (readyResolve) readyResolve()
-    } else if (data.type === 'storage-error') {
-      if (readyReject) readyReject(new Error(data.error))
-    } else if (data.id && pending.has(data.id)) {
-      const p = pending.get(data.id)
-      pending.delete(data.id)
-      if (data.error) p.reject(new Error(data.error))
-      else p.resolve(data.result)
-    }
-  })
-
-  function post(method, args = []) {
-    return readyPromise.then(() => {
-      return new Promise((resolve, reject) => {
-        const id = ++msgId
-        pending.set(id, { resolve, reject })
-        iframe.contentWindow.postMessage({ id, method, args }, '*')
-      })
-    })
+  function recordKey(value) {
+    return value.id ?? value.challengeId
   }
 
   CA.services.db = {
-    ready: () => readyPromise,
-    open: () => readyPromise,
-    get: (store, key) => post('get', [store, key]),
-    put: (store, value) => post('put', [store, value]),
-    delete: (store, key) => post('delete', [store, key]),
-    getAll: (store) => post('getAll', [store]),
-    clear: (store) => post('clear', [store]),
-    exportProfile: () => post('exportProfile'),
-    importProfile: (json) => post('importProfile', [json])
+    ready: () => Promise.resolve(),
+    open: () => Promise.resolve(),
+
+    get(store, key) {
+      const data = load()
+      const s = getStore(data, store)
+      for (const k of Object.keys(s)) {
+        const v = s[k]
+        if (k === key || (v && (v.id === key || v.challengeId === key))) {
+          return Promise.resolve(v)
+        }
+      }
+      return Promise.resolve(null)
+    },
+
+    put(store, value) {
+      const data = load()
+      const s = getStore(data, store)
+      const key = recordKey(value) || 'default'
+      s[key] = value
+      save(data)
+      return Promise.resolve()
+    },
+
+    delete(store, key) {
+      const data = load()
+      const s = getStore(data, store)
+      delete s[key]
+      for (const k of Object.keys(s)) {
+        const v = s[k]
+        if (v && (v.id === key || v.challengeId === key)) {
+          delete s[k]
+        }
+      }
+      save(data)
+      return Promise.resolve()
+    },
+
+    getAll(store) {
+      const data = load()
+      const s = getStore(data, store)
+      return Promise.resolve(Object.values(s))
+    },
+
+    clear(store) {
+      const data = load()
+      data[store] = {}
+      save(data)
+      return Promise.resolve()
+    },
+
+    exportProfile() {
+      const data = load()
+      const profile = data.profiles?.default ?? null
+      const settings = data.settings?.default ?? null
+      const progress = Object.values(data.progress || {})
+      const badges = Object.values(data.badges || {})
+      return Promise.resolve(JSON.stringify({ profile, settings, progress, badges }))
+    },
+
+    importProfile(json) {
+      try {
+        const parsed = JSON.parse(json)
+        const data = load()
+        if (parsed.profile) {
+          data.profiles = { [parsed.profile.id || 'default']: parsed.profile }
+        }
+        if (parsed.settings) {
+          data.settings = { [parsed.settings.id || 'default']: parsed.settings }
+        }
+        if (parsed.badges) {
+          data.badges = {}
+          for (const b of parsed.badges) data.badges[b.id] = b
+        }
+        if (parsed.progress) {
+          data.progress = {}
+          for (const p of parsed.progress) data.progress[p.challengeId] = p
+        }
+        save(data)
+        return Promise.resolve()
+      } catch (e) {
+        return Promise.reject(e)
+      }
+    }
   }
 })()
