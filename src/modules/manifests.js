@@ -1,7 +1,6 @@
 (function () {
 
-window.CA = window.CA || {}
-window.CA.CHALLENGE_MANIFESTS = [
+const CHALLENGE_MANIFESTS = [
   {
     id: 'xss-reflection',
     title: 'Reflected XSS',
