@@ -89,6 +89,13 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 - Blinking cursor `▮`.
 - Monospace output.
 
+### Icons
+- Use Lucide icons from the CDN loaded in every HTML page.
+- Markup: `<i data-lucide="icon-name" aria-hidden="true"></i>` inside buttons, links, or badges.
+- Call `window.lucide?.createIcons()` after any component injects new `<i data-lucide>` elements.
+- Style via `.lucide` and `.lucide-{name}` classes in `src/styles/components.css`.
+- Avoid emoji or generic glyph characters for UI icons.
+
 ### Lab frame
 - Sandboxed `iframe` styled as a mini CRT screen with a bezel.
 - Bezel: dark gradient with inset shadow and scanline overlay.

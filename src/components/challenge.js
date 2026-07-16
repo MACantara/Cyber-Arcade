@@ -46,7 +46,7 @@ class XChallenge extends HTMLElement {
     const p = progress.get(this.#challenge?.id)
     if (p) {
       this.#hintsRevealed = p.hintsUsed || 0
-      const hintBtn = this.querySelector('#hint-btn')
+      const hintBtn = this.querySelector('#hint-btn .hint-text')
       if (hintBtn) hintBtn.textContent = `Hint (${this.#challenge.hints?.length - this.#hintsRevealed || 0} left)`
       const statusEl = this.querySelector('#challenge-status')
       if (statusEl && p.status === 'completed') {
@@ -60,7 +60,7 @@ class XChallenge extends HTMLElement {
     const c = this.#challenge
     this.innerHTML = `
       <section class="page">
-        <a href="./learn.html" class="btn btn-ghost mb-4">← Back</a>
+        <a href="./learn.html" class="btn btn-ghost mb-4"><i data-lucide="arrow-left" aria-hidden="true"></i> Back</a>
         <div class="flex items-center justify-between wrap gap-2 mb-4">
           <h1 class="text-2xl">${c.title}</h1>
           <span class="font-headline text-sm color-primary" id="challenge-status">IN PROGRESS</span>
@@ -73,8 +73,8 @@ class XChallenge extends HTMLElement {
               <x-lab-frame id="lab-frame" challenge-id="${c.id}"></x-lab-frame>
             </div>
             <div class="mt-4 flex gap-2">
-              <button id="hint-btn" class="btn btn-ghost">Hint (${c.hints?.length - this.#hintsRevealed || 0} left)</button>
-              <button id="reset-btn" class="btn btn-danger">Reset</button>
+              <button id="hint-btn" class="btn btn-ghost"><i data-lucide="lightbulb" aria-hidden="true"></i> <span class="hint-text">Hint (${c.hints?.length - this.#hintsRevealed || 0} left)</span></button>
+              <button id="reset-btn" class="btn btn-danger"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Reset</button>
             </div>
             <div id="hint-box" class="terminal mt-4 hidden"></div>
           </div>
@@ -84,6 +84,8 @@ class XChallenge extends HTMLElement {
         </div>
       </section>
     `
+
+    if (window.lucide) window.lucide.createIcons()
 
     this.querySelector('#hint-btn')?.addEventListener('click', () => this.#showHint())
     this.querySelector('#reset-btn')?.addEventListener('click', () => this.#mountLab())

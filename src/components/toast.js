@@ -6,13 +6,26 @@ class XToast extends HTMLElement {
   }
 
   show(message, type = 'info') {
+    const icons = {
+      success: 'check-circle',
+      error: 'x-circle',
+      warning: 'alert-triangle',
+      info: 'info'
+    }
     const item = document.createElement('div')
     item.className = 'toast-item'
     if (type === 'success') item.style.borderColor = 'var(--color-primary)'
     if (type === 'error') item.style.borderColor = 'var(--color-secondary)'
     if (type === 'warning') item.style.borderColor = 'var(--color-warning)'
-    item.textContent = message
+    const icon = document.createElement('i')
+    icon.setAttribute('data-lucide', icons[type] || icons.info)
+    icon.setAttribute('aria-hidden', 'true')
+    const text = document.createElement('span')
+    text.textContent = ' ' + message
+    item.appendChild(icon)
+    item.appendChild(text)
     this.appendChild(item)
+    if (window.lucide) window.lucide.createIcons()
     setTimeout(() => {
       item.style.opacity = '0'
       setTimeout(() => item.remove(), 300)

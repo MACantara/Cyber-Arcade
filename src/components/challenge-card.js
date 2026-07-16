@@ -30,11 +30,13 @@ class XChallengeCard extends HTMLElement {
         </div>
         <div class="mt-4 flex items-center justify-between">
           <span class="text-xs font-headline color-muted">${statusLabel}</span>
-          ${isLocked ? '<button class="btn btn-ghost" disabled>LOCKED</button>' : `<a href="./challenge.html?id=${challenge.id}" class="btn">PLAY</a>`}
+          ${isLocked ? '<button class="btn btn-ghost" disabled><i data-lucide="lock" aria-hidden="true"></i> LOCKED</button>' : `<a href="./challenge.html?id=${challenge.id}" class="btn"><i data-lucide="play" aria-hidden="true"></i> PLAY</a>`}
         </div>
         ${challenge.score ? `<div class="mt-2 font-terminal color-primary">Score: ${challenge.score}</div>` : ''}
       </article>
     `
+    if (window.lucide) window.lucide.createIcons()
+
   }
 }
 

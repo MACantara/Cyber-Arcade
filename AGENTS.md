@@ -76,6 +76,13 @@ public/             Static assets
 - Use `view-transition-name` for page transitions.
 - Respect `prefers-reduced-motion`.
 
+### Icons
+- Use Lucide icons from the CDN (`<script src="https://unpkg.com/lucide@latest"></script>`) loaded on every HTML page.
+- Markup: `<i data-lucide="icon-name" aria-hidden="true"></i>`.
+- Call `window.lucide?.createIcons()` after a component injects new icon elements.
+- Use the `.lucide` and `.lucide-{name}` CSS classes for custom fills/sizing; prefer `currentColor` so icons inherit text color.
+- Do not use generic emoji for UI icons.
+
 ### HTML
 - Semantic HTML5 elements.
 - Use `<dialog>` for modals, `<details>` for disclosure, `<template>` for component templates.

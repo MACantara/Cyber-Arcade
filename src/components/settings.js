@@ -52,12 +52,13 @@ class XSettings extends HTMLElement {
 
         <div class="card mb-6">
           <div class="card-header">Data</div>
-          <button class="btn btn-coin" id="export-btn">Export Profile</button>
-          <button class="btn btn-ghost" id="import-btn">Import Profile</button>
-          <button class="btn btn-danger" id="reset-btn">Reset All Data</button>
+          <button class="btn btn-coin" id="export-btn"><i data-lucide="download" aria-hidden="true"></i> Export Profile</button>
+          <button class="btn btn-ghost" id="import-btn"><i data-lucide="upload" aria-hidden="true"></i> Import Profile</button>
+          <button class="btn btn-danger" id="reset-btn"><i data-lucide="trash-2" aria-hidden="true"></i> Reset All Data</button>
         </div>
       </section>
     `
+    if (window.lucide) window.lucide.createIcons()
   }
 
   async #onChange(e) {

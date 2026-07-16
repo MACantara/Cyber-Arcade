@@ -29,10 +29,11 @@ class XHudBar extends HTMLElement {
             <span class="hud-stat-value" id="hud-badges">0</span>
             <span class="hud-stat-label">BADGES</span>
           </div>
-          <a href="./settings.html" class="btn btn-ghost">⚙</a>
+          <a href="./settings.html" class="btn btn-ghost" aria-label="Settings"><i data-lucide="settings" aria-hidden="true"></i></a>
         </nav>
       </header>
     `
+    if (window.lucide) window.lucide.createIcons()
     this.#unsubscribe = store.subscribe((state) => this.update(state))
     this.update(store.get())
   }

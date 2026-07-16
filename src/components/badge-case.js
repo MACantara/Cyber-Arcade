@@ -21,12 +21,13 @@ class XBadgeCase extends HTMLElement {
       <div class="flex wrap gap-2">
         ${BADGES.map(b => `
           <div class="badge ${badges.has(b.id) ? 'badge-gold' : ''}" title="${b.description}">
-            <span>${badges.has(b.id) ? '★' : '☆'}</span>
+            <i data-lucide="star" aria-hidden="true"></i>
             <span>${b.name}</span>
           </div>
         `).join('')}
       </div>
     `
+    if (window.lucide) window.lucide.createIcons()
   }
 }
 

@@ -249,4 +249,16 @@
     pointer-events: auto;
     animation: slide-up 0.3s ease;
   }
+
+  .lucide {
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: -0.2em;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .lucide-star {
+    fill: currentColor;
+  }
 }
