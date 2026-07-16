@@ -92,6 +92,15 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 ### Lab frame
 - Sandboxed `iframe` styled as a mini CRT screen with a bezel.
 - Bezel: dark gradient with inset shadow and scanline overlay.
+- On `file://` the lab is mounted into a Shadow DOM host (`.lab-screen`) so the same design-system stylesheets must be injected or inlined.
+
+### Labs
+- Every lab receives a `container` element; mount all lab UI inside it.
+- Scope lab styles to a `.lab` wrapper and append the `<style>` element to the wrapper, not `document.head`.
+- Do not rely on `body`, `html`, `vh`, or `vw` units — the lab runs inside a fixed-size frame.
+- Use the design-token CSS variables (`--color-*`, `--font-*`, `--space-*`, `--shadow`) instead of hard-coded hex values.
+- Re-use shared component classes where possible: `.btn`, `.input`, `.terminal`.
+- The lab wrapper should use `min-height: 100%` to fill the `.lab-screen` frame without overflowing the page.
 
 ## Elevation
 

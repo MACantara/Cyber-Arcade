@@ -6,7 +6,9 @@ function buildSandboxSrcdoc(challenge) {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="./src/labs/sandbox.css">
+  <link rel="stylesheet" href="./src/styles/tokens.css">
+  <link rel="stylesheet" href="./src/styles/base.css">
+  <link rel="stylesheet" href="./src/styles/components.css">
   <script src="${labPath}"><\/script>
   <script src="./src/labs/sandbox-runtime.js"><\/script>
 </head>
@@ -78,11 +80,20 @@ class LabRunner {
     if (!shadow) shadow = this.container.attachShadow({ mode: 'open' })
     shadow.innerHTML = ''
 
+    const sheets = [
+      './src/styles/tokens.css',
+      './src/styles/base.css',
+      './src/styles/components.css'
+    ]
+    sheets.forEach(href => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = href
+      shadow.appendChild(link)
+    })
+
     const wrapper = document.createElement('div')
-    wrapper.style.width = '100%'
-    wrapper.style.height = '400px'
-    wrapper.style.backgroundColor = 'var(--color-black, #05060a)'
-    wrapper.style.border = '2px solid var(--color-gray-300)'
+    wrapper.className = 'lab-screen'
     wrapper.style.overflow = 'auto'
     wrapper.style.boxSizing = 'border-box'
 

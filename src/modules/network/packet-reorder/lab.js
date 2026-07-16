@@ -56,9 +56,7 @@ window.CA = window.CA || {}
 window.CA.labs = window.CA.labs || {}
 window.CA.labs['network/packet-reorder'] = {
   mount(container, hooks) {
-    const doc = container.ownerDocument
-    const style = doc.createElement('style')
-    style.textContent = `
+    const styleText = `
       .lab { font-family: 'VT323', monospace; padding: 1rem; color: ${PALETTE.white}; }
       .lab h2 { font-family: 'Press Start 2P', monospace; font-size: 0.875rem; color: ${PALETTE.primary}; margin: 0 0 0.75rem; }
       .lab p { margin: 0 0 1rem; line-height: 1.4; }
@@ -69,7 +67,6 @@ window.CA.labs['network/packet-reorder'] = {
       .lab .btn { font-family: 'Press Start 2P', monospace; font-size: 0.625rem; text-transform: uppercase; padding: 0.6rem 1rem; background: ${PALETTE.primary}; color: ${PALETTE.black}; border: 2px solid ${PALETTE.white}; box-shadow: 4px 4px 0 ${PALETTE.white}; cursor: pointer; }
       .lab .btn:active { box-shadow: 2px 2px 0 ${PALETTE.white}; transform: translate(2px, 2px); }
     `
-    doc.head.appendChild(style)
 
     const packets = [
       { seq: 1000, payload: 'FLAG' },
@@ -84,14 +81,18 @@ window.CA.labs['network/packet-reorder'] = {
     let finished = false
 
     function render() {
-      container.textContent = ''
+      container.innerHTML = ''
       const wrapper = document.createElement('div')
       wrapper.className = 'lab'
       setStyle(wrapper, {
         background: PALETTE.bg,
-        minHeight: '100vh',
+        minHeight: '100%',
         padding: '1rem'
       })
+
+      const style = document.createElement('style')
+      style.textContent = styleText
+      wrapper.appendChild(style)
 
       const title = document.createElement('h2')
       title.textContent = 'PACKET REORDER'

@@ -6,16 +6,15 @@ window.CA.labs['general/terminal-hunt'] = {
   mount(container, hooks) {
     const style = document.createElement('style')
     style.textContent = `
-      body { margin: 0; background: #0b0c15; color: #f0f0f0; font-family: 'VT323', monospace; }
-      .wrap { max-width: 800px; margin: 0 auto; padding: 1rem; }
-      h1 { font-family: 'Press Start 2P', monospace; font-size: 1rem; color: #00ff9d; margin: 0 0 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
-      .terminal { background: #05060a; border: 2px solid #00ff9d; padding: 1rem; box-shadow: 0 0 8px #00ff9d; min-height: 300px; max-height: 60vh; overflow-y: auto; }
+      .wrap { max-width: 800px; margin: 0 auto; padding: 1rem; background: var(--color-bg, #0b0c15); color: var(--color-white, #f0f0f0); font-family: 'VT323', monospace; min-height: 100%; box-sizing: border-box; }
+      h1 { font-family: 'Press Start 2P', monospace; font-size: 1rem; color: var(--color-primary, #00ff9d); margin: 0 0 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+      .terminal { background: var(--color-black, #05060a); border: 2px solid var(--color-primary, #00ff9d); padding: 1rem; box-shadow: 0 0 8px var(--color-primary, #00ff9d); min-height: 300px; max-height: 60vh; overflow-y: auto; }
       .line { white-space: pre-wrap; margin: 0.25rem 0; }
-      .prompt { display: flex; align-items: center; gap: 0.5rem; color: #00ff9d; }
-      .input { flex: 1; background: transparent; border: none; color: #00ff9d; font-family: 'VT323', monospace; font-size: 1.25rem; outline: none; }
+      .prompt { display: flex; align-items: center; gap: 0.5rem; color: var(--color-primary, #00ff9d); }
+      .input { flex: 1; background: transparent; border: none; color: var(--color-primary, #00ff9d); font-family: 'VT323', monospace; font-size: 1.25rem; outline: none; }
       .blink { animation: blink 1s step-end infinite; }
       @keyframes blink { 50% { opacity: 0; } }
-      .error { color: #ff0055; }
+      .error { color: var(--color-danger, #ff0055); }
     `
     container.appendChild(style)
 

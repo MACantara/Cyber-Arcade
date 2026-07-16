@@ -20,9 +20,7 @@ window.CA = window.CA || {}
 window.CA.labs = window.CA.labs || {}
 window.CA.labs['network/port-knock'] = {
   mount(container, hooks) {
-    const doc = container.ownerDocument
-    const style = doc.createElement('style')
-    style.textContent = `
+    const styleText = `
       .lab { font-family: 'VT323', monospace; padding: 1rem; color: ${PALETTE.white}; }
       .lab h2 { font-family: 'Press Start 2P', monospace; font-size: 0.875rem; color: ${PALETTE.primary}; margin: 0 0 0.75rem; }
       .lab p { margin: 0 0 1rem; line-height: 1.4; }
@@ -36,7 +34,6 @@ window.CA.labs['network/port-knock'] = {
       .lab .btn:active { box-shadow: 2px 2px 0 ${PALETTE.white}; transform: translate(2px, 2px); }
       .lab .log { margin-top: 1rem; padding: 0.75rem; background: ${PALETTE.black}; border: 2px solid ${PALETTE.border}; min-height: 3rem; color: ${PALETTE.tertiary}; font-size: 1.25rem; }
     `
-    doc.head.appendChild(style)
 
     const ports = [
       { num: 22, label: 'SSH' },
@@ -54,14 +51,18 @@ window.CA.labs['network/port-knock'] = {
     let finished = false
 
     function render() {
-      container.textContent = ''
+      container.innerHTML = ''
       const wrapper = document.createElement('div')
       wrapper.className = 'lab'
       setStyle(wrapper, {
         background: PALETTE.bg,
-        minHeight: '100vh',
+        minHeight: '100%',
         padding: '1rem'
       })
+
+      const style = document.createElement('style')
+      style.textContent = styleText
+      wrapper.appendChild(style)
 
       const title = document.createElement('h2')
       title.textContent = 'PORT KNOCK'
