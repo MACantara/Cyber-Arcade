@@ -2,12 +2,13 @@
 
 ## Milestones
 
-### MVP (Phase 1)
-- Core engine, router, store, IndexedDB.
-- Dashboard, profile, settings views.
+### MVP (Phase 1) — Done
+- Core engine, store, shared storage.
+- Dashboard, learn, profile, leaderboard, settings pages.
 - One challenge per domain.
-- PWA shell and service worker.
+- Static multi-page shell.
 - Design system and UI components.
+- Vercel deployment via `vercel.json`.
 
 ### Expansion (Phase 2)
 - 2-3 challenges per domain.
@@ -19,7 +20,7 @@
 - Advanced animations, view transitions, canvas mini-games.
 - More crypto/binary and reverse-engineering labs.
 - Accessibility audit and high-contrast theme.
-- Performance optimization (lazy loading, code splitting).
+- Performance optimization (lazy loading).
 
 ### Future (Phase 4)
 - Import/export of user data.

@@ -1,81 +1,78 @@
 # ARCHITECTURE.md — Cyber-Arcade
 
 ## System overview
-Cyber-Arcade is a single-page application (SPA) that runs entirely in the browser. There is no backend. All state is persisted in IndexedDB. The app is installable as a PWA.
+
+Cyber-Arcade is a static multi-page website that runs entirely in the browser. There is no backend. State is stored locally: `localStorage` on HTTP/HTTPS and `window.name` on `file://`. The app can be installed as a PWA via `manifest.json`; no service worker is currently registered.
 
 ## Components
 
 ### Browser
-- Loads `index.html`.
-- Registers `src/sw.js` as a service worker.
-- Runs `src/main.js` as an ES module.
 
-### App shell
-- `index.html` is a minimal shell: `<!DOCTYPE html>`, `<head>` with CSP, fonts, manifest, `<body>` with `<x-app>` root and a single `<script type="module" src="src/main.js"></script>`.
+- Loads one of the HTML pages: `index.html`, `learn.html`, `challenge.html`, `profile.html`, `leaderboard.html`, or `settings.html`.
+- Scripts are loaded as classic `<script defer>` tags, not ES modules.
+- All shared code is attached to the global `window.CA` namespace.
+
+### Pages
+
+- Each HTML page loads `src/global.js`, `src/storage-proxy.js`, the services it needs, relevant components, and a page boot script from `src/pages/*.js`.
+- There is no client-side router; navigation uses normal `<a href="...html">` links.
 
 ### Runtime modules
-- `src/main.js` — bootstraps app, registers service worker, imports app and styles.
-- `src/app.js` — `XApp` custom element. Owns global state, router, and layout.
-- `src/router.js` — `Router` class. Maps URL paths to view names and dispatches `route-change` events.
-- `src/services/db.js` — `Database` wrapper over IndexedDB. Promise-based API.
-- `src/services/store.js` — `Store` reactive state container. Components can subscribe to slices.
-- `src/services/progress.js` — `Progress` helper. Reads/writes per-challenge state.
-- `src/services/gamify.js` — `Gamify` engine. Computes XP/level, streaks, badges, daily challenges.
+
+- `src/global.js` — creates `window.CA` namespaces.
+- `src/storage-proxy.js` — `db` service backed by `localStorage` (HTTP/HTTPS) or `window.name` (`file://`).
+- `src/services/store.js` — reactive state container.
+- `src/services/gamify.js` — XP/level, streaks, badges, daily challenges.
+- `src/services/progress.js` — starts, completes, and resets challenges.
+- `src/modules/manifests.js` — global `window.CA.CHALLENGE_MANIFESTS` array.
+- `src/modules/registry.js` — flat lookup over `CHALLENGE_MANIFESTS`.
 
 ### UI layer
-- `src/components/` — autonomous Web Components. Each component lives in its own file and is imported by `src/main.js`.
-- `src/styles/` — CSS layers, tokens, base, components, animations, utilities.
+
+- `src/components/` — self-registering Web Components.
+- `src/styles/` — CSS layers: tokens, base, components, animations, utilities.
 
 ### Lab engine
-- `src/labs/lab-runner.js` — `LabRunner` mounts a challenge's `lab.js` into a sandboxed `iframe` and a control panel.
-- `src/labs/protocol.js` — `postMessage` protocol between parent and lab. Defines `init`, `check`, `hint`, `complete`, `fail` message types.
+
+- `src/labs/lab-runner.js` — `LabRunner` class. Mounts a lab either:
+  - inside a sandboxed `srcdoc` `<iframe>` when served over HTTP/HTTPS, or
+  - directly into a Shadow DOM host on `file://` to avoid `about:srcdoc` local-resource restrictions.
+- `src/labs/sandbox-runtime.js` — runs inside the iframe, loads the requested lab from `window.CA.labs`, and relays `postMessage` events.
+- Labs are plain classic scripts that register themselves on `window.CA.labs[key]`.
 
 ### Content modules
-- `src/modules/<domain>/<challenge>/` — self-contained challenge.
-  - `manifest.json` — challenge metadata: id, title, domain, difficulty, description, xp, prerequisites, hints, success criteria.
-  - `lab.js` — factory function that returns a lab controller.
-  - `assets/` — optional images, fonts, data.
-- `src/modules/<domain>/index.js` — exports all challenge manifests in that domain.
-- `src/modules/registry.js` — imports all domains and exposes a flat challenge map.
+
+- `src/modules/<domain>/<challenge>/`
+  - `lab.js` — classic script that calls `window.CA.labs[key] = { mount(container, hooks) { ... } }`.
+- `src/modules/manifests.js` — central manifest registry.
+- `src/modules/registry.js` — lookup helpers.
 
 ## Data flow
 
-1. `index.html` loads `main.js`.
-2. `main.js` imports `app.js`, components, services, and styles.
-3. `App` initializes `Database`, `Store`, `Router`, and `Gamify`.
-4. `App` renders the layout (`<x-app>`) and subscribes to route changes.
-5. The router selects the active view:
-   - `/` → dashboard
-   - `/learn` → learning path
-   - `/challenge/:id` → challenge view
-   - `/profile` → profile page
-   - `/leaderboard` → local leaderboard
-   - `/settings` → settings
-6. View components read from `Store` and call services to write.
-7. IndexedDB updates trigger `BroadcastChannel` updates for multi-tab sync.
+1. Page loads `global.js`, `storage-proxy.js`, services, manifests, registry, components, and page boot script.
+2. Page boot script loads profile/progress/badges/settings from `db`.
+3. Components subscribe to `Store` and call `progress`/`gamify` services to mutate state.
+4. `db` serializes the shared object to `localStorage` or `window.name`.
+5. Other pages load the same data from storage on startup.
 
 ## State management
 
-- `Store` holds a reactive JSON state derived from `Database` and runtime events.
-- Components re-render on state changes by subscribing to `Store`.
-- IndexedDB is the source of truth. `Store` is a mirror for fast reads.
-- Writes go through `Database` then update `Store`.
+- `Store` holds reactive JSON state.
+- Components subscribe for updates and re-render.
+- `db` (via `src/storage-proxy.js`) is the source of truth.
+- Writes go through `db`, then `Store`.
 
 ## Storage
 
-- IndexedDB database `cyber-arcade` with stores:
-  - `profiles`
-  - `progress`
-  - `badges`
-  - `settings`
-  - `logs`
+- HTTP/HTTPS deployments use `localStorage` key `CA::data`.
+- `file://` pages use `window.name` with `CA::` prefix because every `file:` URL is a separate origin.
+- Stores: `profiles`, `progress`, `badges`, `settings`.
 - See `DATABASE.md` for schemas.
 
 ## Security model
 
 - No user authentication. Local profile only.
-- No backend. No network requests for core functionality.
-- Labs are untrusted. They run in `srcdoc` iframes with `sandbox="allow-scripts"` and no `allow-same-origin`.
-- The parent and lab communicate over `postMessage` with an origin whitelist.
+- No backend network requests for core functionality.
+- Labs are untrusted. On HTTP/HTTPS they run in `srcdoc` iframes with `sandbox="allow-scripts"` and no `allow-same-origin`.
+- On `file://` labs run in a Shadow DOM host inside the parent page; they cannot make network requests and only communicate through the `hooks` object passed to `mount`.
 - User payloads are never `eval`-ed. Labs implement deterministic checkers.
-- CSP in `index.html` blocks inline scripts (except importmap if used) and external sources.

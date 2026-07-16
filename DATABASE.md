@@ -1,13 +1,17 @@
 # DATABASE.md — Cyber-Arcade
 
-## Database
+## Storage
 
-- **Name:** `cyber-arcade`
-- **Version:** `1`
-- **Type:** IndexedDB
-- **Backend:** none
+Cyber-Arcade has no backend. Data is stored client-side:
+
+- **HTTP/HTTPS deployments:** `localStorage` key `CA::data`.
+- **`file://` pages:** `window.name` with prefix `CA::`.
+
+The underlying schema is the same for both backends.
 
 ## Stores
+
+The shared data object contains these top-level stores:
 
 ### `profiles`
 | Field | Type | Description |
@@ -24,7 +28,7 @@
 ### `progress`
 | Field | Type | Description |
 |-------|------|-------------|
-| `challengeId` | string | Primary key (id) |
+| `challengeId` | string | Primary key |
 | `status` | string | `locked` | `available` | `started` | `completed` |
 | `attempts` | number | Number of attempts |
 | `score` | number | Best score (0-100) |
@@ -52,7 +56,7 @@
 | `dailyChallengeDate` | string | ISO date of last daily challenge |
 | `dailyChallengeId` | string | ID of today's daily challenge |
 
-### `logs`
+### `logs` (not currently populated)
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | auto-increment | Primary key |
@@ -61,17 +65,7 @@
 | `data` | object | Arbitrary event data |
 | `timestamp` | string | ISO timestamp |
 
-## Indexes
-
-- `progress` has no indexes; keyed by `challengeId`.
-- `badges` has an index `byDomain` on `domain`.
-- `logs` has indexes `byType` and `byChallenge`.
-
-## Migrations
-
-Migrations live in `src/services/db.js`. On `upgradeneeded`, the new schema is built and old data is preserved when possible.
-
 ## Backup / restore
 
-- `src/services/db.js` exposes `exportProfile()` and `importProfile(json)`.
+- `src/storage-proxy.js` exposes `exportProfile()` and `importProfile(json)`.
 - Data is JSON-serializable. No encryption.

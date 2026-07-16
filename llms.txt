@@ -1,57 +1,62 @@
 # llms.txt — Cyber-Arcade
 
-> A static, gamified cyber-security learning PWA with no backend.
+> A static, gamified cyber-security learning website with no backend.
 
 ## Summary
 - **Name:** Cyber-Arcade
-- **Type:** Single-page static PWA
-- **Stack:** Modern HTML, modern CSS, modern JavaScript (vanilla ES modules)
-- **Storage:** IndexedDB
+- **Type:** Static multi-page website
+- **Stack:** Modern HTML, CSS, and vanilla JavaScript (classic scripts, no build)
+- **Storage:** `localStorage` on HTTP/HTTPS, `window.name` on `file://`
 - **Theme:** Retro 8-bit arcade cabinet
-- **Deployment:** GitHub Pages / any static CDN
+- **Deployment:** GitHub Pages, Netlify, Vercel, or any static CDN
 - **Repo root:** `C:\Projects\Devin-Agent-Test`
+- **Vercel config:** `vercel.json` sets `outputDirectory: "."`
 
 ## Architecture
-- `index.html` bootstraps the app and loads `src/main.js` as an ES module.
-- `src/app.js` orchestrates state, routing, and rendering.
-- `src/router.js` maps paths to views using `history.pushState` and dispatches custom events.
-- `src/services/db.js` wraps IndexedDB for profiles, progress, badges, and settings.
-- `src/services/store.js` is a tiny reactive store that components subscribe to.
+- `index.html`, `learn.html`, `challenge.html`, `profile.html`, `leaderboard.html`, `settings.html` are separate pages.
+- Every page loads `src/global.js`, `src/storage-proxy.js`, services, manifests, registry, components, and a page boot script.
+- All shared code is attached to `window.CA`.
+- `src/modules/manifests.js` defines `window.CA.CHALLENGE_MANIFESTS`.
+- `src/modules/registry.js` provides challenge lookup helpers.
+- `src/services/store.js` is a tiny reactive store.
 - `src/services/progress.js` reads/writes challenge completion.
 - `src/services/gamify.js` computes XP, levels, streaks, badges, and daily challenges.
-- `src/components/` contains Web Components (vanilla custom elements).
-- `src/labs/` contains the `LabRunner` and safe `postMessage` protocol.
-- `src/modules/<domain>/<challenge>/` contains challenge manifests and lab code.
-- `src/sw.js` caches assets for offline use.
-- `manifest.json` makes the app installable.
+- `src/storage-proxy.js` is the `db` service that persists to `localStorage` or `window.name`.
+- `src/components/` contains self-registering Web Components.
+- `src/labs/lab-runner.js` mounts labs into a Shadow DOM host on `file://` or a sandboxed `srcdoc` iframe on HTTP/HTTPS.
+- `src/labs/sandbox-runtime.js` runs inside the iframe and dispatches `postMessage` events.
+- `src/modules/<domain>/<challenge>/lab.js` registers a lab controller on `window.CA.labs`.
+- `manifest.json` makes the app installable; no service worker is currently registered.
 
 ## Technologies
 - HTML5: semantic elements, `<dialog>`, `<details>`, `<template>`, `<canvas>`, `<iframe sandbox>`.
-- CSS: custom properties, `@layer`, `@property`, container queries, subgrid, view transitions, `color-mix`, `oklch`, `prefers-reduced-motion`.
-- JS: ES modules, private fields, top-level await, `async/await`, `structuredClone`, `BroadcastChannel`, `AbortController`, `ResizeObserver`, `IntersectionObserver`, `Web Animations API`, `Canvas 2D`.
-- APIs: IndexedDB, Service Worker, Cache Storage, Web Crypto.
+- CSS: custom properties, `@layer`, container queries, view transitions, `prefers-reduced-motion`.
+- JS: classic scripts, IIFEs, private fields, `async/await`, `structuredClone`.
+- Storage: `localStorage` / `window.name`.
 
 ## Entry points
-- App: `index.html`
-- Script: `src/main.js`
-- Worker: `src/sw.js`
+- Dashboard: `index.html`
+- Learn: `learn.html`
+- Challenge: `challenge.html?id=<challenge-id>`
+- Other pages: `profile.html`, `leaderboard.html`, `settings.html`
 - Manifest: `manifest.json`
+- Vercel config: `vercel.json`
 
 ## Documentation index
 - `AGENTS.md` — agent conventions, quick start, build/deploy, security rules.
-- `DESIGN.md` — design system (colors, typography, spacing, components, animation).
+- `DESIGN.md` — design system (colors, typography, spacing, components, animation, lab design).
 - `ARCHITECTURE.md` — system design, module layout, data flow.
-- `DATABASE.md` — IndexedDB schema, stores, indexes, migrations.
+- `DATABASE.md` — storage schema and backends.
 - `STYLEGUIDE.md` — naming, formatting, code conventions.
-- `SECURITY.md` — threat model, sandbox, CSP, no-eval policy.
+- `SECURITY.md` — threat model, sandbox, no-eval policy.
 - `TESTING.md` — testing strategy, verification checklist.
 - `PROMPTS.md` — reusable prompts and agent workflows.
 - `MEMORY.md` — long-term context, recurring decisions, unresolved issues.
 - `ROADMAP.md` — planned features and milestones.
 - `DECISIONS.md` — architecture decision records.
-- `API.md` — client-only API (no backend endpoints).
+- `API.md` — client-only API.
 - `CONTRIBUTING.md` — workflow for human contributors.
 - `README.md` — human-facing quick start and project description.
 
 ## For agents
-Before writing code, read `AGENTS.md` and `DESIGN.md`. Add new modules under `src/modules/<domain>/<challenge>/` and register them in `src/modules/<domain>/index.js`. Keep all challenge code free of `eval` and user-supplied script execution.
+Before writing code, read `AGENTS.md` and `DESIGN.md`. Add new labs under `src/modules/<domain>/<challenge>/lab.js` and register the challenge manifest in `src/modules/manifests.js`. Keep all challenge code free of `eval` and user-supplied script execution.

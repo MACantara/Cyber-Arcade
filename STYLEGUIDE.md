@@ -19,17 +19,23 @@
 
 ## JavaScript conventions
 
-- ES modules only. No `require`.
+- Classic scripts wrapped in IIFEs. No ES modules, no `import`/`export`, no `require`.
+- Shared code is attached to `window.CA`:
+  - `window.CA.services` — store, gamify, progress, db
+  - `window.CA.labs` — lab controllers
+  - `window.CA.CHALLENGE_MANIFESTS` — challenge metadata
+  - `window.CA.LabRunner` — lab runner class
 - Private class fields (`#field`) for internal state.
 - Use `AbortController` for fetch/listener cleanup.
 - Prefer `const`; use `let` only when reassigned.
 - Avoid `var`.
+- Do not use `eval`, `new Function(...)`, or `document.write`.
 
 ## CSS conventions
 
 - CSS is organized in layers: `@layer base, components, utilities, animations`.
 - Design tokens live in `src/styles/tokens.css`.
-- Component styles may be in `src/styles/components.css` or scoped within a component.
+- Component styles may be in `src/styles/components.css` or scoped within a component/lab.
 - Use custom properties for all colors and spacing.
 - Respect `prefers-reduced-motion`.
 
@@ -39,9 +45,10 @@
 - Custom elements are self-registering in their own modules.
 - No inline event handlers. Attach listeners in JS.
 - `data-*` attributes for component state hooks in HTML.
+- Navigation uses normal relative `<a href="...html">` links.
 
 ## Testing conventions
 
-- Manual browser test for each challenge.
-- Verify IndexedDB state after every action.
+- Manual browser test for each page and challenge.
+- Verify shared state after every action.
 - Run Lighthouse before considering a feature complete.
