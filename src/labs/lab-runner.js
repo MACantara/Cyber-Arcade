@@ -17,19 +17,100 @@ function buildSandboxSrcdoc(challenge) {
 
 class LabRunner {
   #iframe = null
+  #directContainer = null
+  #script = null
+  #controller = null
   #parentOrigin = null
   #ready = false
   #readyResolve = null
   #readyPromise = null
+  #onMessage = null
 
   constructor(container, challenge) {
     this.container = container
     this.challenge = challenge
     this.#readyPromise = new Promise((resolve) => { this.#readyResolve = resolve })
+    this.#onMessage = (event) => this.#handleMessage(event)
   }
 
   mount() {
-    if (this.#iframe) this.destroy()
+    this.destroy()
+    this.#ready = false
+    this.#readyPromise = new Promise((resolve) => { this.#readyResolve = resolve })
+
+    if (window.location.protocol === 'file:') {
+      this.#mountDirect()
+    } else {
+      this.#mountIframe()
+    }
+
+    return this.#readyPromise
+  }
+
+  submit(payload) {
+    if (this.#controller && typeof this.#controller.submit === 'function') {
+      this.#controller.submit(payload)
+      return
+    }
+    if (this.#ready && this.#iframe) {
+      this.#post('check', { payload })
+    }
+  }
+
+  destroy() {
+    window.removeEventListener('message', this.#onMessage)
+    this.#iframe?.remove()
+    this.#iframe = null
+    this.#directContainer?.remove()
+    this.#directContainer = null
+    this.#script?.remove()
+    this.#script = null
+    this.#controller = null
+    this.#ready = false
+  }
+
+  #dispatch(type, detail) {
+    this.container.dispatchEvent(new CustomEvent(type, { detail, bubbles: true }))
+  }
+
+  #mountDirect() {
+    this.container.innerHTML = ''
+    const div = document.createElement('div')
+    div.className = 'lab-screen'
+    this.container.appendChild(div)
+    this.#directContainer = div
+
+    const key = `${this.challenge.domain}/${this.challenge.id}`
+    const script = document.createElement('script')
+    this.#script = script
+    script.src = `./src/modules/${this.challenge.domain}/${this.challenge.id}/lab.js`
+    script.onerror = () => {
+      this.#dispatch('lab-fail', { message: `Failed to load lab for ${key}.` })
+    }
+    script.onload = () => {
+      const lab = window.CA?.labs?.[key]
+      if (!lab || typeof lab.mount !== 'function') {
+        this.#dispatch('lab-fail', { message: `Lab ${key} not found.` })
+        return
+      }
+      try {
+        this.#controller = lab.mount(div, {
+          onComplete: (detail) => this.#dispatch('lab-complete', detail),
+          onFail: (detail) => this.#dispatch('lab-fail', detail),
+          onHint: (text) => this.#dispatch('lab-hint', { text })
+        })
+      } catch (err) {
+        console.error(err)
+        this.#dispatch('lab-fail', { message: 'Failed to load lab.' })
+        return
+      }
+      this.#ready = true
+      this.#readyResolve?.()
+    }
+    document.head.appendChild(script)
+  }
+
+  #mountIframe() {
     this.#iframe = document.createElement('iframe')
     this.#iframe.className = 'lab-screen'
     this.#iframe.setAttribute('sandbox', 'allow-scripts')
@@ -40,36 +121,23 @@ class LabRunner {
 
     this.#parentOrigin = window.location.origin
     window.addEventListener('message', this.#onMessage)
-
-    return this.#readyPromise
   }
 
-  submit(payload) {
-    this.#post('check', { payload })
-  }
-
-  destroy() {
-    window.removeEventListener('message', this.#onMessage)
-    this.#iframe?.remove()
-    this.#iframe = null
-    this.#ready = false
-  }
-
-  #onMessage = (event) => {
-    if (event.source !== this.#iframe?.contentWindow) return
+  #handleMessage(event) {
+    if (this.#iframe && event.source !== this.#iframe.contentWindow) return
     if (event.origin !== 'null' && event.origin !== this.#parentOrigin) return
 
     const { type, data } = event.data || {}
     if (type === 'ready') {
       this.#ready = true
       this.#post('init', { challenge: this.challenge })
-      this.#readyResolve()
+      this.#readyResolve?.()
     } else if (type === 'complete') {
-      this.container.dispatchEvent(new CustomEvent('lab-complete', { detail: data, bubbles: true }))
+      this.#dispatch('lab-complete', data)
     } else if (type === 'fail') {
-      this.container.dispatchEvent(new CustomEvent('lab-fail', { detail: data, bubbles: true }))
+      this.#dispatch('lab-fail', data)
     } else if (type === 'hint') {
-      this.container.dispatchEvent(new CustomEvent('lab-hint', { detail: data, bubbles: true }))
+      this.#dispatch('lab-hint', data)
     }
   }
 
