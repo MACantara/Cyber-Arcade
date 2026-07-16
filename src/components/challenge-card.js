@@ -32,7 +32,7 @@ class XChallengeCard extends HTMLElement {
           <span class="badge">${challenge.difficulty?.toUpperCase()}</span>
           <span class="font-headline text-xs color-quaternary">+${challenge.xp} XP</span>
         </div>
-        <div class="mt-4 flex items-center justify-between">
+        <div class="card-footer">
           <span class="text-xs font-headline color-muted">${statusLabel}</span>
           ${isLocked
             ? `<button class="btn btn-ghost" disabled title="${lockReason}"><i data-lucide="lock" aria-hidden="true"></i> LOCKED</button>`
