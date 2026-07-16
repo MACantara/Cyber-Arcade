@@ -51,7 +51,7 @@ class XChallenge extends HTMLElement {
       const statusEl = this.querySelector('#challenge-status')
       if (statusEl && p.status === 'completed') {
         statusEl.textContent = 'COMPLETED'
-        statusEl.style.color = 'var(--color-primary)'
+        statusEl.classList.add('status-completed')
       }
     }
   }
@@ -67,7 +67,7 @@ class XChallenge extends HTMLElement {
         </div>
         <p class="subtitle">${c.description}</p>
 
-        <div class="grid grid-2 mb-6" style="align-items: start;">
+        <div class="grid grid-2 mb-6 items-start">
           <div>
             <div class="lab-bezel">
               <x-lab-frame id="lab-frame" challenge-id="${c.id}"></x-lab-frame>

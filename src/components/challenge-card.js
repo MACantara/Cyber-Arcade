@@ -20,16 +20,16 @@ class XChallengeCard extends HTMLElement {
     const isStarted = status === 'started'
     const isAvailable = status === 'available'
     const statusLabel = isCompleted ? 'COMPLETED' : isStarted ? 'IN PROGRESS' : isLocked ? 'LOCKED' : 'AVAILABLE'
-    const difficultyColor = challenge.difficulty === 'beginner' ? 'var(--color-primary)' : challenge.difficulty === 'easy' ? 'var(--color-tertiary)' : challenge.difficulty === 'medium' ? 'var(--color-quaternary)' : 'var(--color-secondary)'
+    const difficultyClass = `difficulty-${challenge.difficulty || 'beginner'}`
     const lockReason = challenge.lockReason || ''
 
     this.innerHTML = `
-      <article class="card" style="${isLocked ? 'opacity: 0.6;' : ''}">
-        <div class="card-header" style="color: ${difficultyColor};">${challenge.domain?.toUpperCase()}</div>
+      <article class="card ${difficultyClass} ${isLocked ? 'card-locked' : ''}">
+        <div class="card-header">${challenge.domain?.toUpperCase()}</div>
         <h3 class="text-md mb-2">${challenge.title}</h3>
         <p class="text-sm color-muted mb-4">${challenge.description}</p>
         <div class="flex items-center justify-between wrap gap-2">
-          <span class="badge" style="border-color: ${difficultyColor}; color: ${difficultyColor};">${challenge.difficulty?.toUpperCase()}</span>
+          <span class="badge">${challenge.difficulty?.toUpperCase()}</span>
           <span class="font-headline text-xs color-quaternary">+${challenge.xp} XP</span>
         </div>
         <div class="mt-4 flex items-center justify-between">

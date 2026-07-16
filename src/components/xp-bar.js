@@ -22,7 +22,7 @@ class XXpBar extends HTMLElement {
         <span class="font-terminal color-muted">${remainder} / ${next - current} XP</span>
       </div>
       <div class="xp-bar">
-        <div class="xp-bar-fill" style="width: ${percentage}%"></div>
+        <div class="xp-bar-fill" style="--width: ${percentage}%"></div>
       </div>
     `
   }

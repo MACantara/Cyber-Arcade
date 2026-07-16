@@ -12,22 +12,18 @@ const PALETTE = {
   black: '#05060a'
 }
 
-function setStyle(el, styles) {
-  Object.assign(el.style, styles)
-}
-
 window.CA = window.CA || {}
 window.CA.labs = window.CA.labs || {}
 window.CA.labs['network/port-knock'] = {
   mount(container, hooks) {
     const styleText = `
-      .lab { font-family: 'VT323', monospace; padding: 1rem; color: ${PALETTE.white}; }
+      .lab { font-family: 'VT323', monospace; padding: 1rem; color: ${PALETTE.white}; background: ${PALETTE.bg}; min-height: 100%; }
       .lab h2 { font-family: 'Press Start 2P', monospace; font-size: 0.875rem; color: ${PALETTE.primary}; margin: 0 0 0.75rem; }
       .lab p { margin: 0 0 1rem; line-height: 1.4; }
       .lab .door { padding: 0.75rem; background: ${PALETTE.black}; border: 2px solid ${PALETTE.border}; text-align: center; font-size: 1.5rem; margin-bottom: 1rem; color: ${PALETTE.secondary}; }
       .lab .door.open { color: ${PALETTE.primary}; border-color: ${PALETTE.primary}; }
       .lab .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
-      .lab .port { padding: 0.75rem; background: ${PALETTE.surface}; border: 2px solid ${PALETTE.border}; color: ${PALETTE.white}; font-family: 'Press Start 2P', monospace; font-size: 0.625rem; cursor: pointer; box-shadow: 4px 4px 0 ${PALETTE.border}; }
+      .lab .port { padding: 0.75rem; background: ${PALETTE.surface}; border: 2px solid ${PALETTE.border}; color: ${PALETTE.white}; font-family: 'Press Start 2P', monospace; font-size: 0.625rem; cursor: pointer; box-shadow: 4px 4px 0 ${PALETTE.border}; white-space: pre; }
       .lab .port:hover { border-color: ${PALETTE.quaternary}; box-shadow: 4px 4px 0 ${PALETTE.quaternary}; }
       .lab .port:disabled { opacity: 0.4; cursor: not-allowed; }
       .lab .btn { font-family: 'Press Start 2P', monospace; font-size: 0.625rem; text-transform: uppercase; padding: 0.6rem 1rem; background: ${PALETTE.primary}; color: ${PALETTE.black}; border: 2px solid ${PALETTE.white}; box-shadow: 4px 4px 0 ${PALETTE.white}; cursor: pointer; }
@@ -54,11 +50,6 @@ window.CA.labs['network/port-knock'] = {
       container.innerHTML = ''
       const wrapper = document.createElement('div')
       wrapper.className = 'lab'
-      setStyle(wrapper, {
-        background: PALETTE.bg,
-        minHeight: '100%',
-        padding: '1rem'
-      })
 
       const style = document.createElement('style')
       style.textContent = styleText
@@ -89,7 +80,6 @@ window.CA.labs['network/port-knock'] = {
         const btn = document.createElement('button')
         btn.className = 'port'
         btn.textContent = `${port.num}\n${port.label}`
-        setStyle(btn, { whiteSpace: 'pre' })
         btn.addEventListener('click', () => {
           if (finished) return
           log.textContent = `> knocked port ${port.num} (${port.label})`

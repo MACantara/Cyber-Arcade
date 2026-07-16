@@ -12,7 +12,7 @@ function buildSandboxSrcdoc(challenge) {
   <script src="${labPath}"><\/script>
   <script src="./src/labs/sandbox-runtime.js"><\/script>
 </head>
-<body style="margin:0;background:var(--color-bg,#0b0c15);color:var(--color-white,#f0f0f0);font-family:monospace;">
+<body class="lab-body">
 </body>
 </html>`
 }
@@ -93,14 +93,10 @@ class LabRunner {
     })
 
     const wrapper = document.createElement('div')
-    wrapper.className = 'lab-screen'
-    wrapper.style.overflow = 'auto'
-    wrapper.style.boxSizing = 'border-box'
+    wrapper.className = 'lab-screen lab-scroll'
 
     const div = document.createElement('div')
-    div.style.width = '100%'
-    div.style.minHeight = '100%'
-    div.style.boxSizing = 'border-box'
+    div.className = 'lab-mount'
     wrapper.appendChild(div)
     shadow.appendChild(wrapper)
     this.#directContainer = wrapper

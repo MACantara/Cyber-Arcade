@@ -26,23 +26,23 @@ class XLeaderboard extends HTMLElement {
         <p class="subtitle mb-6">Local heroes only. No backend required.</p>
 
         <div class="card">
-          <table class="font-terminal" style="width:100%; border-collapse: collapse; font-size: var(--text-lg);">
+          <table class="leaderboard-table font-terminal">
             <thead>
-              <tr style="border-bottom: 2px solid var(--color-gray-300);">
-                <th style="text-align:left; padding: var(--space-2);">Rank</th>
-                <th style="text-align:left; padding: var(--space-2);">Player</th>
-                <th style="text-align:left; padding: var(--space-2);">Level</th>
-                <th style="text-align:left; padding: var(--space-2);">XP</th>
-                <th style="text-align:left; padding: var(--space-2);">Completed</th>
+              <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Level</th>
+                <th>XP</th>
+                <th>Completed</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style="padding: var(--space-2);" class="color-quaternary">#1</td>
-                <td style="padding: var(--space-2);">${profile.name}</td>
-                <td style="padding: var(--space-2);" class="color-primary">${profile.level}</td>
-                <td style="padding: var(--space-2);" class="color-quaternary">${profile.xp}</td>
-                <td style="padding: var(--space-2);">${completed}</td>
+                <td class="color-quaternary">#1</td>
+                <td>${profile.name}</td>
+                <td class="color-primary">${profile.level}</td>
+                <td class="color-quaternary">${profile.xp}</td>
+                <td>${completed}</td>
               </tr>
             </tbody>
           </table>

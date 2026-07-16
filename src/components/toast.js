@@ -13,10 +13,7 @@ class XToast extends HTMLElement {
       info: 'info'
     }
     const item = document.createElement('div')
-    item.className = 'toast-item'
-    if (type === 'success') item.style.borderColor = 'var(--color-primary)'
-    if (type === 'error') item.style.borderColor = 'var(--color-secondary)'
-    if (type === 'warning') item.style.borderColor = 'var(--color-warning)'
+    item.className = `toast-item toast-${type}`
     const icon = document.createElement('i')
     icon.setAttribute('data-lucide', icons[type] || icons.info)
     icon.setAttribute('aria-hidden', 'true')
@@ -27,7 +24,7 @@ class XToast extends HTMLElement {
     this.appendChild(item)
     if (window.lucide) window.lucide.createIcons()
     setTimeout(() => {
-      item.style.opacity = '0'
+      item.classList.add('toast-fade')
       setTimeout(() => item.remove(), 300)
     }, 3000)
   }

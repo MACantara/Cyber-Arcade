@@ -59,7 +59,7 @@ class XProfile extends HTMLElement {
                 <div class="card-header">${domain.toUpperCase()}</div>
                 <div class="font-terminal text-lg">${done} / ${count} completed</div>
                 <div class="xp-bar mt-2">
-                  <div class="xp-bar-fill" style="width: ${count ? (done / count) * 100 : 0}%"></div>
+                  <div class="xp-bar-fill" style="--width: ${count ? (done / count) * 100 : 0}%"></div>
                 </div>
               </div>
             `

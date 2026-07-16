@@ -41,9 +41,10 @@ class XLearn extends HTMLElement {
       return { ...c, status, lockReason }
     })
     const selected = this.#filter === 'all' ? null : DOMAINS.find(d => d.id === this.#filter)
+    const activeClass = (id) => this.#filter === id ? 'btn-filter active' : 'btn-filter'
     const domainIntro = selected
-      ? `<div class="card mb-6" style="border-color: ${selected.color};">
-          <div class="card-header" style="color: ${selected.color};">${selected.label}</div>
+      ? `<div class="card mb-6 domain-card ${selected.id}">
+          <div class="card-header">${selected.label}</div>
           <p class="color-muted">${selected.description}</p>
         </div>`
       : `<div class="card mb-6">
@@ -57,9 +58,9 @@ class XLearn extends HTMLElement {
         <p class="subtitle mb-6">Explore interactive missions, build real skills, and track your progress.</p>
 
         <div class="flex gap-2 wrap mb-6">
-          <button class="btn ${this.#filter === 'all' ? 'btn-primary' : 'btn-ghost'}" data-filter="all">ALL</button>
+          <button class="btn btn-filter ${this.#filter === 'all' ? 'active' : ''}" data-filter="all">ALL</button>
           ${DOMAINS.map(d => `
-            <button class="btn ${this.#filter === d.id ? 'btn-primary' : 'btn-ghost'}" data-filter="${d.id}" style="${this.#filter === d.id ? `border-color: ${d.color}; color: ${d.color};` : ''}">${d.label}</button>
+            <button class="btn ${activeClass(d.id)} ${d.id}" data-filter="${d.id}">${d.label}</button>
           `).join('')}
         </div>
 

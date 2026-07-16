@@ -59,10 +59,7 @@ window.CA.labs['general/recon-robot'] = {
     const label = document.createElement('label')
     label.setAttribute('for', 'flag-input')
     label.textContent = 'Flag'
-    label.style.position = 'absolute'
-    label.style.width = '1px'
-    label.style.height = '1px'
-    label.style.overflow = 'hidden'
+    label.className = 'lab-sr-only'
     const input = document.createElement('input')
     input.id = 'flag-input'
     input.setAttribute('type', 'text')

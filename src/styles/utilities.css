@@ -40,6 +40,7 @@
 
   .flex { display: flex; }
   .flex-col { flex-direction: column; }
+  .items-start { align-items: start; }
   .items-center { align-items: center; }
   .justify-between { justify-content: space-between; }
   .justify-center { justify-content: center; }

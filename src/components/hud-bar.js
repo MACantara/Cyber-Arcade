@@ -16,9 +16,9 @@ class XHudBar extends HTMLElement {
             <span class="hud-stat-value" id="hud-level">1</span>
             <span class="hud-stat-label">LVL</span>
           </div>
-          <div class="hud-stat" style="min-width: 120px;">
+          <div class="hud-stat hud-stat-xp">
             <div class="xp-bar" title="XP" aria-label="XP bar">
-              <div class="xp-bar-fill" id="hud-xp" style="width: 0%;"></div>
+              <div class="xp-bar-fill" id="hud-xp"></div>
             </div>
             <span class="hud-stat-label">XP</span>
           </div>
@@ -73,7 +73,7 @@ class XHudBar extends HTMLElement {
     const streakEl = this.querySelector('#hud-streak')
     const badgesEl = this.querySelector('#hud-badges')
     if (levelEl) levelEl.textContent = profile.level
-    if (xpEl) xpEl.style.width = `${progress.percentage}%`
+    if (xpEl) xpEl.style.setProperty('--width', `${progress.percentage}%`)
     if (streakEl) streakEl.textContent = profile.streak || 0
     if (badgesEl) badgesEl.textContent = badges.size || 0
   }

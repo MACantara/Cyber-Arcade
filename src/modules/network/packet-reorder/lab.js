@@ -11,34 +11,15 @@ const PALETTE = {
   black: '#05060a'
 }
 
-function setStyle(el, styles) {
-  Object.assign(el.style, styles)
-}
-
 function createCard(text, seq) {
   const btn = document.createElement('button')
   btn.className = 'packet'
-  setStyle(btn, {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '0.25rem',
-    padding: '0.75rem',
-    background: PALETTE.surface,
-    border: '2px solid ' + PALETTE.border,
-    color: PALETTE.white,
-    fontFamily: "'VT323', monospace",
-    fontSize: '1.25rem',
-    cursor: 'pointer',
-    boxShadow: '4px 4px 0 ' + PALETTE.border,
-    transition: 'transform 0.05s'
-  })
   const seqLine = document.createElement('span')
+  seqLine.className = 'seq'
   seqLine.textContent = `SEQ ${seq}`
-  setStyle(seqLine, { color: PALETTE.tertiary, fontSize: '1rem' })
   const payloadLine = document.createElement('span')
+  payloadLine.className = 'payload'
   payloadLine.textContent = text
-  setStyle(payloadLine, { color: PALETTE.primary, fontSize: '1.5rem' })
   btn.append(seqLine, payloadLine)
   return btn
 }
@@ -57,10 +38,13 @@ window.CA.labs = window.CA.labs || {}
 window.CA.labs['network/packet-reorder'] = {
   mount(container, hooks) {
     const styleText = `
-      .lab { font-family: 'VT323', monospace; padding: 1rem; color: ${PALETTE.white}; }
+      .lab { font-family: 'VT323', monospace; padding: 1rem; color: ${PALETTE.white}; background: ${PALETTE.bg}; min-height: 100%; }
       .lab h2 { font-family: 'Press Start 2P', monospace; font-size: 0.875rem; color: ${PALETTE.primary}; margin: 0 0 0.75rem; }
       .lab p { margin: 0 0 1rem; line-height: 1.4; }
       .lab .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+      .lab .packet { display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; padding: 0.75rem; background: ${PALETTE.surface}; border: 2px solid ${PALETTE.border}; color: ${PALETTE.white}; font-family: 'VT323', monospace; font-size: 1.25rem; cursor: pointer; box-shadow: 4px 4px 0 ${PALETTE.border}; transition: transform 0.05s; }
+      .lab .packet .seq { color: ${PALETTE.tertiary}; font-size: 1rem; }
+      .lab .packet .payload { color: ${PALETTE.primary}; font-size: 1.5rem; }
       .lab .packet:hover { border-color: ${PALETTE.tertiary}; box-shadow: 4px 4px 0 ${PALETTE.tertiary}; }
       .lab .packet:disabled { opacity: 0.4; cursor: not-allowed; }
       .lab .chain { background: ${PALETTE.black}; border: 2px solid ${PALETTE.border}; padding: 0.75rem; min-height: 2.5rem; font-size: 1.5rem; color: ${PALETTE.primary}; letter-spacing: 0.05em; margin-bottom: 1rem; }
@@ -84,11 +68,6 @@ window.CA.labs['network/packet-reorder'] = {
       container.innerHTML = ''
       const wrapper = document.createElement('div')
       wrapper.className = 'lab'
-      setStyle(wrapper, {
-        background: PALETTE.bg,
-        minHeight: '100%',
-        padding: '1rem'
-      })
 
       const style = document.createElement('style')
       style.textContent = styleText
