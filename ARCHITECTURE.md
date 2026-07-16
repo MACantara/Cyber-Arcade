@@ -36,9 +36,10 @@ Cyber-Arcade is a static multi-page website that runs entirely in the browser. T
 
 - `src/labs/lab-runner.js` — `LabRunner` class. Mounts a lab either:
   - inside a sandboxed `srcdoc` `<iframe>` when served over HTTP/HTTPS, or
-  - directly into a Shadow DOM host on `file://` to avoid `about:srcdoc` local-resource restrictions.
+  - directly into a Shadow DOM host on `file://` (or `about:` contexts such as `about:srcdoc`) to avoid local-resource restrictions.
 - `src/labs/sandbox-runtime.js` — runs inside the iframe, loads the requested lab from `window.CA.labs`, and relays `postMessage` events.
 - Labs are plain classic scripts that register themselves on `window.CA.labs[key]`.
+- The `general/welcome` lab is the beginner tutorial: it displays a boot log with a hidden flag and asks the player to submit it.
 
 ### Content modules
 

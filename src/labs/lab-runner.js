@@ -40,7 +40,7 @@ class LabRunner {
     this.#ready = false
     this.#readyPromise = new Promise((resolve) => { this.#readyResolve = resolve })
 
-    if (window.location.protocol === 'file:') {
+    if (window.location.protocol === 'file:' || window.location.protocol === 'about:') {
       this.#mountDirect()
     } else {
       this.#mountIframe()
@@ -132,7 +132,7 @@ class LabRunner {
       this.#ready = true
       this.#readyResolve?.()
     }
-    document.head.appendChild(script)
+    shadow.appendChild(script)
   }
 
   #mountIframe() {

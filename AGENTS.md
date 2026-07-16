@@ -109,7 +109,7 @@ A `lab.js` file is a classic script wrapped in an IIFE. It must register on `win
 (function () {
   window.CA = window.CA || {}
   window.CA.labs = window.CA.labs || {}
-  window.CA.labs['general/my-lab'] = {
+  window.CA.labs['general/welcome'] = {
     mount(container, hooks) {
       // Build UI inside container (a DOM element in the lab frame).
       // hooks.onComplete({ score: 100, flag: 'FLAG{...}', message: '...' }) when solved.
