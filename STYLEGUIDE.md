@@ -36,7 +36,10 @@
 - CSS is organized in layers: `@layer base, components, utilities, animations`.
 - Design tokens live in `src/styles/tokens.css`.
 - Component styles may be in `src/styles/components.css` or scoped within a component/lab.
-- Use custom properties for all colors and spacing.
+- Use custom properties for all colors, spacing, and font weights.
+- Always set `font-weight` when using `Press Start 2P` or `VT323` (both are single-weight fonts). Use `--font-weight-headline` and `--font-weight-terminal`.
+- Use `--font-weight-body` for body text, `--font-weight-body-strong` for emphasized labels, and `--font-weight-bold` for `b`/`strong` in `Inter`.
+- Cards use a fixed size range (`min-height: 260px`, `max-height: 320px`) and clamp the description to three lines so the grid stays uniform.
 - Respect `prefers-reduced-motion`.
 
 ## HTML conventions

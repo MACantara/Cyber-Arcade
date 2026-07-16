@@ -72,6 +72,9 @@ Use `rem` for fluid spacing, but `px` for pixel-art border widths and grid gaps.
 ### Card
 - Background `var(--color-surface)`, border `2px solid var(--color-gray-300)`.
 - `box-shadow: 4px 4px 0 var(--color-gray-300)`.
+- Fixed size range: `min-height: 260px`, `max-height: 320px`, with `overflow: hidden`.
+- Use `display: flex; flex-direction: column;` so the footer action stays anchored.
+- Clamp the description paragraph to three lines with `line-clamp` so long text never breaks the card height.
 - Hover lifts card and brightens border.
 - Header uses pixel font and uppercase.
 

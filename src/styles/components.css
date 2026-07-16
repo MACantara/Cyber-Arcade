@@ -52,7 +52,20 @@
     border: 2px solid var(--color-gray-300);
     box-shadow: var(--shadow);
     padding: var(--space-4);
+    min-height: 260px;
+    max-height: 320px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+  }
+
+  .card p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 
   .card:hover {
