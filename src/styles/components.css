@@ -84,9 +84,11 @@
     gap: var(--space-2);
   }
 
-  .card-compact {
+  .card-compact,
+  .challenge-complete {
     min-height: auto;
     max-height: none;
+    overflow: visible;
   }
 
   .card:hover {
