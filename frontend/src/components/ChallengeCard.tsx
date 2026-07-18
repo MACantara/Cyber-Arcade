@@ -32,17 +32,19 @@ export function ChallengeCard({ challenge, progress, titles }: ChallengeCardProp
         <div className="flex items-center flex-wrap gap-2">
           <span className="badge">{challenge.difficulty.toUpperCase()}</span>
           <span className="font-headline text-xs text-quaternary">+{challenge.xp} XP</span>
-          <span className="text-xs font-headline text-gray-200">{labels[status]}</span>
         </div>
-        {isLocked ? (
-          <button className="btn btn-ghost" disabled title={lockReason}>
-            LOCKED
-          </button>
-        ) : (
-          <Link to={`/challenge/${challenge.id}`} className="btn">
-            {isStarted ? 'CONTINUE' : 'PLAY'}
-          </Link>
-        )}
+        <div className="flex items-center flex-wrap gap-2">
+          <span className="text-xs font-headline text-gray-200">{labels[status]}</span>
+          {isLocked ? (
+            <button className="btn btn-ghost" disabled title={lockReason}>
+              LOCKED
+            </button>
+          ) : (
+            <Link to={`/challenge/${challenge.id}`} className="btn">
+              {isStarted ? 'CONTINUE' : 'PLAY'}
+            </Link>
+          )}
+        </div>
       </div>
       {isLocked && <p className="text-xs text-gray-200 mt-2">{lockReason}</p>}
     </div>
