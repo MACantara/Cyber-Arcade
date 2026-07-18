@@ -2,13 +2,14 @@ import json
 from datetime import date
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from .models import ChallengeManifest, DailyChallenge, Domain
 from .services.validator import validate_manifest
 
 app = FastAPI(title="Cyber-Arcade API")
+api = APIRouter(prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,12 +39,12 @@ for i, raw in enumerate(raw_challenges):
         print("Manifest validation error:", error)
 
 
-@app.get("/challenges", response_model=list[ChallengeManifest])
+@api.get("/challenges", response_model=list[ChallengeManifest])
 def list_challenges():
     return CHALLENGES
 
 
-@app.get("/challenges/{challenge_id}", response_model=ChallengeManifest)
+@api.get("/challenges/{challenge_id}", response_model=ChallengeManifest)
 def get_challenge(challenge_id: str):
     for challenge in CHALLENGES:
         if challenge.id == challenge_id:
@@ -51,12 +52,12 @@ def get_challenge(challenge_id: str):
     raise HTTPException(status_code=404, detail="Challenge not found")
 
 
-@app.get("/domains", response_model=list[Domain])
+@api.get("/domains", response_model=list[Domain])
 def list_domains():
     return DOMAINS
 
 
-@app.get("/daily", response_model=DailyChallenge)
+@api.get("/daily", response_model=DailyChallenge)
 def get_daily():
     today = str(date.today())
     seed = sum(int(part) for part in today.split("-"))
@@ -65,3 +66,6 @@ def get_daily():
         available = CHALLENGES
     challenge = available[seed % len(available)]
     return DailyChallenge(id=challenge.id, date=today)
+
+
+app.include_router(api)

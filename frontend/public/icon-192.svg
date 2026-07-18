@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" fill="#0d1117" rx="24" />
+  <rect x="36" y="60" width="120" height="72" fill="#ff2a6d" rx="8" />
+  <rect x="44" y="68" width="104" height="56" fill="#05d9e8" rx="4" />
+  <text x="96" y="112" font-family="monospace" font-size="28" fill="#0d1117" text-anchor="middle" dominant-baseline="middle">CA</text>
+</svg>
