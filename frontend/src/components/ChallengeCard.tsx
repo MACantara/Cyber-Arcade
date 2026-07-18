@@ -34,7 +34,6 @@ export function ChallengeCard({ challenge, progress, titles }: ChallengeCardProp
           <span className="font-headline text-xs text-quaternary">+{challenge.xp} XP</span>
         </div>
         <div className="flex items-center flex-wrap gap-2">
-          <span className="text-xs font-headline text-gray-200">{labels[status]}</span>
           {isLocked ? (
             <button className="btn btn-ghost" disabled title={lockReason}>
               LOCKED
@@ -44,6 +43,7 @@ export function ChallengeCard({ challenge, progress, titles }: ChallengeCardProp
               {isStarted ? 'CONTINUE' : 'PLAY'}
             </Link>
           )}
+          <span className="text-xs font-headline text-gray-200">{labels[status]}</span>
         </div>
       </div>
       {isLocked && <p className="text-xs text-gray-200 mt-2">{lockReason}</p>}
