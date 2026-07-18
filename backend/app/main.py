@@ -8,7 +8,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from .models import ChallengeManifest, DailyChallenge, Domain
 from .services.validator import validate_manifest
 
-app = FastAPI(title="Cyber-Arcade API")
+app = FastAPI(
+    title="Cyber-Arcade API",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+)
 api = APIRouter(prefix="/api")
 
 app.add_middleware(
