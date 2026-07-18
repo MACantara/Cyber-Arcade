@@ -1,0 +1,114 @@
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    image-rendering: pixelated;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-headline);
+    text-transform: uppercase;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  h1 { font-size: var(--text-2xl); }
+  h2 { font-size: var(--text-xl); }
+  h3 { font-size: var(--text-lg); }
+  h4 { font-size: var(--text-md); }
+
+  @media (min-width: 768px) {
+    h1 { font-size: var(--text-3xl); }
+    h2 { font-size: var(--text-2xl); }
+    h3 { font-size: var(--text-xl); }
+    h4 { font-size: var(--text-lg); }
+  }
+
+  p {
+    margin: 0 0 var(--space-4) 0;
+    color: var(--color-gray-100);
+  }
+
+  a {
+    color: var(--color-tertiary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  button, input, textarea, select {
+    font-family: inherit;
+    font-size: var(--text-base);
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  ul, ol {
+    margin: 0 0 var(--space-4) 0;
+    padding-left: var(--space-6);
+  }
+
+  code, pre {
+    font-family: var(--font-terminal);
+    background-color: var(--color-black);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius);
+  }
+
+  main,
+  .app-main {
+    padding: var(--space-4) var(--space-3);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    min-height: calc(100vh - var(--header-height));
+  }
+
+  @media (min-width: 768px) {
+    main,
+    .app-main {
+      padding: var(--space-6) var(--space-4);
+    }
+  }
+
+  .page {
+    animation: fade-in 0.3s ease;
+  }
+
+  .page-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 60vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

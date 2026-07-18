@@ -1,5 +1,17 @@
 {
-  "framework": null,
-  "buildCommand": null,
-  "outputDirectory": "."
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "frontend": {
+      "root": "frontend/",
+      "entrypoint": "Dockerfile.vercel"
+    },
+    "backend": {
+      "root": "backend/",
+      "entrypoint": "Dockerfile.vercel"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": { "service": "backend" } },
+    { "source": "/(.*)", "destination": { "service": "frontend" } }
+  ]
 }
