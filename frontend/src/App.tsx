@@ -8,6 +8,7 @@ import { Learn } from './pages/Learn'
 import { Challenge } from './pages/Challenge'
 import { Profile } from './pages/Profile'
 import { Leaderboard } from './pages/Leaderboard'
+import { NotFound } from './pages/NotFound'
 import { SettingsPage } from './pages/Settings'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="profile" element={<Profile />} />
         <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )
