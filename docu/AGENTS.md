@@ -1,96 +1,83 @@
 # AGENTS.md — Cyber-Arcade
 
 ## Project type
-Static, multi-page website. No backend. No frameworks. Vanilla classic scripts, Web Components, shared local storage, modern HTML/CSS/JS.
+Full-stack learning platform. The frontend is a React 18 + TypeScript 5 + Vite 6 + Tailwind CSS v4 SPA. The backend is a stateless FastAPI service. All user data (profile, progress, badges, settings) is persisted in the browser via IndexedDB (`idb`).
 
 ## Quick start
 
-1. Open the repository root as a static site. It works from `file://` or any HTTP server.
-2. Open `index.html` for the dashboard, `learn.html` for the challenge list, or `challenge.html?id=<id>` for a challenge.
-3. Verify in DevTools:
-   - **Application > Storage > Local Storage** (on HTTP/HTTPS) or check `window.name` on `file://`.
-   - **Lighthouse** — PWA / a11y / performance audits.
-4. If serving over HTTP, you can run `python -m http.server 8000`.
-
-## Build / deploy
-- There is no build step. The site is static.
-- Deploy the repo root to GitHub Pages, Netlify, Vercel, or any CDN.
-- `vercel.json` at the root forces Vercel to serve the root directory.
-- Verify `index.html`, `manifest.json` are at the root.
+1. Start the backend:
+   ```powershell
+   cd backend
+   pip install -r requirements.txt
+   uvicorn app.main:app --host 0.0.0.0 --port 80
+   ```
+2. Start the frontend:
+   ```powershell
+   cd frontend
+   npm install
+   npm run dev
+   ```
+3. Open `http://localhost:5173`.
+4. Verify in DevTools:
+   - **Application > Storage > IndexedDB** — `CA` database with `profiles`, `progress`, `badges`, `settings`, and `logs` stores.
+   - **Network** — calls to `/api/challenges`, `/api/domains`, `/api/daily` hit the FastAPI backend.
 
 ## File layout
 ```
-index.html          App shell / dashboard
-learn.html          Challenge list
-challenge.html      Active challenge
-profile.html        User profile
-leaderboard.html    Local leaderboard
-settings.html       Settings
-manifest.json       PWA manifest
-vercel.json         Vercel static config
-src/
-  global.js         Global window.CA namespace
-  storage-proxy.js  localStorage / window.name storage service
-  services/
-    store.js        Reactive state store
-    progress.js     Progress / persistence helpers
-    gamify.js       XP, levels, streaks, badges
-  components/       Web Components (vanilla custom elements)
-  styles/           CSS architecture
-  labs/             Lab runner and sandbox runtime
-  modules/          Domain modules
-    domains.js      Shared domain config (labels, colors, descriptions)
-    manifests.js    Central challenge manifest registry and validator
-    registry.js     Challenge lookup helpers
-    web/
-    network/
-    crypto/
-    general/
-      <challenge>/
-        lab.js
-  pages/            Per-page boot scripts
-public/             Static assets
+vercel.json                 Vercel Services routing
+frontend/
+  package.json              React/TypeScript/Vite/Tailwind deps
+  tsconfig.json
+  vite.config.ts
+  index.html
+  src/
+    main.tsx                React entry with router & query client
+    App.tsx                 Route definitions
+    pages/                  Route-level pages: Dashboard, Learn, Challenge, Profile, Leaderboard, Settings
+    components/             React components: Layout, Nav, HudBar, ChallengeCard, LabFrame, Loading
+    services/               api.ts, db.ts, gamify.ts, progress.ts, store.ts
+    config/domains.ts       Shared DOMAINS array
+    types.ts                TypeScript interfaces
+    index.css               Tailwind CSS v4 CSS-first theme
+  public/                   Static assets: manifest.json, icon, legacy lab assets
+backend/
+  app/main.py               FastAPI app
+  app/models.py             Pydantic models
+  app/services/validator.py Challenge manifest validator
+  app/data/challenges.json  Extracted challenge manifests
+  app/data/domains.json     Extracted domain config
+  Dockerfile.vercel         Uvicorn container
+  requirements.txt
+docu/                       Documentation (README/ARCHITECTURE/DESIGN/TESTING etc.)
+docker-compose.yml          Local orchestration
 ```
 
 ## Conventions
 
-### JavaScript
-- Classic scripts only. No ES modules. No `import`/`export`.
-- Wrap every `.js` file in an IIFE to prevent global redeclaration errors.
-- Prefer `const`/`let`, `async/await`, private class fields, optional chaining.
+### TypeScript / React
+- React functional components with hooks.
+- Use ES modules and named imports/exports.
+- Prefer `const`/`let`, `async/await`, and strict typing.
 - Do not use `eval`, `new Function(...)`, `document.write`, or `innerHTML` with user data.
-- Use `DOMPurify` if we ever need to parse HTML; currently the design avoids raw HTML insertion.
-- All components extend `HTMLElement` and use `connectedCallback`/`disconnectedCallback`.
-- Event listeners should be removed on disconnect.
-- Use `AbortController` for cancellable async work.
-- Shared code lives on `window.CA`:
-  - `window.CA.services` — store, gamify, progress, db
-  - `window.CA.CHALLENGE_MANIFESTS` — challenge definitions
-  - `window.CA.labs` — lab controllers
-  - `window.CA.LabRunner` — lab runner class
+- Use `useStore` (built on `useSyncExternalStore`) to subscribe to the global store.
+- Use TanStack Query (`useChallenges`) for backend state.
+- Keep services in `frontend/src/services/`. Import from there, not `window.CA`.
 
-### CSS
-- Use `src/styles/tokens.css` for design tokens.
-- Use `@layer` for base, components, utilities, animations.
-- Prefer `rem`/`px` where the 8-bit pixel grid calls for pixels.
-- Mobile-first: write base styles for narrow viewports and use `min-width` media queries to scale up.
-- Use media queries for responsive layouts; container queries may be used where components need to adapt to their own size.
-- Use `view-transition-name` for page transitions where supported.
-- No inline `style` attributes or JavaScript `.style.*` assignments; use external classes and CSS custom properties for dynamic values.
-- Re-use shared lab classes (`.lab-body`, `.lab-title`, `.lab-label`, `.lab-input`, `.lab-btn`, `.lab-output`, `.lab-status`, `.lab-sr-only`) before adding scoped `<style>` blocks.
-- Respect `prefers-reduced-motion`.
+### CSS (Tailwind CSS v4)
+- Tailwind CSS v4 is configured via CSS-first syntax in `frontend/src/index.css` (`@import "tailwindcss"`, `@theme`, `@source`).
+- Prefer Tailwind utility classes; use custom theme variables (`--color-*`, `--font-*`, etc.) for the retro arcade palette.
+- Dynamic domain colors can be passed via CSS custom properties (e.g. `--domain-color`).
+- Mobile-first responsive design using Tailwind breakpoints.
+- Respect `prefers-reduced-motion` via the `reducedMotion` user setting and Tailwind `motion-safe`/`motion-reduce` modifiers.
 
 ### Icons
-- Use Lucide icons from the CDN (`<script src="https://unpkg.com/lucide@latest"></script>`) loaded on every HTML page.
-- Markup: `<i data-lucide="icon-name" aria-hidden="true"></i>`.
-- Call `window.lucide?.createIcons()` after a component injects new icon elements.
-- Use the `.lucide` and `.lucide-{name}` CSS classes for custom fills/sizing; prefer `currentColor` so icons inherit text color.
+- Use `lucide-react` SVG components directly in JSX (`import { Trophy, Flame, Zap } from 'lucide-react'`).
 - Do not use generic emoji for UI icons.
 
 ### HTML
-- Semantic HTML5 elements.
-- Use `<dialog>` for modals, `<details>` for disclosure, `<template>` for component templates.
-- Each page is a separate HTML file. Navigation uses relative `.html` links.
+- The single-page app entry is `frontend/index.html`.
+- Use semantic HTML5 elements inside React components.
+- Navigation is handled by `react-router-dom` with route paths `/`, `/learn`, `/challenge/:id`, `/profile`, `/leaderboard`, `/settings`.
 
 ### Security
 - Treat user input as untrusted.
@@ -101,9 +88,10 @@ public/             Static assets
 
 ### Testing
 - Manual browser verification is the primary test.
-- Run `node --check` on relevant JS files.
-- Run `npm run lint` if a `package.json` is added; otherwise use DevTools console.
-- Lighthouse should score >=90 in PWA, Accessibility, Best Practices, Performance.
+- Run `npm run build` to type-check and bundle the React app.
+- Run `python -m py_compile backend/app/main.py` to validate Python syntax.
+- Use DevTools console for runtime errors.
+- Lighthouse targets: >=90 in Performance, Accessibility, Best Practices.
 
 ## Lab module API
 
@@ -132,9 +120,9 @@ When building lab UIs, prefer the shared lab classes in `src/styles/components.c
 A challenge is registered by adding its manifest object to `window.CA.CHALLENGE_MANIFESTS` in `src/modules/manifests.js`.
 
 ## Agent workflow
-- Read `DESIGN.md`, `ARCHITECTURE.md`, and `STYLEGUIDE.md` before writing code.
-- To add a new domain, update `src/modules/domains.js` and add a matching `.btn-filter.active.domain-<id>` style in `src/styles/components.css`.
-- To add a lab, create `src/modules/<domain>/<challenge>/lab.js` and add a manifest object to `src/modules/manifests.js`.
-- Run `node tests/manifests.test.js` after adding or editing manifests.
-- Keep modules self-contained and free of inline styles; use reusable CSS classes and CSS custom properties for dynamic values.
-- Update `llms.txt` if you add or move documentation.
+- Read `docu/DESIGN.md`, `docu/ARCHITECTURE.md`, and `docu/STYLEGUIDE.md` before writing code.
+- To add a new domain, add it to `backend/app/data/domains.json` and `frontend/src/config/domains.ts`.
+- To add a lab, create `src/modules/<domain>/<challenge>/lab.js` (inside `frontend/public/legacy/` after building) and add a manifest object to `backend/app/data/challenges.json`.
+- Run `python -m py_compile backend/app/main.py` after backend edits.
+- Run `npm run build` after frontend edits.
+- Update `docu/llms.txt` if you add or move documentation.

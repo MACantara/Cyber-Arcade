@@ -2,81 +2,67 @@
 
 ## System overview
 
-Cyber-Arcade is a static multi-page website that runs entirely in the browser. There is no backend. State is stored locally: `localStorage` on HTTP/HTTPS and `window.name` on `file://`. The app can be installed as a PWA via `manifest.json`; no service worker is currently registered.
+Cyber-Arcade is a full-stack gamified cyber-security learning platform. The frontend is a React + TypeScript + Tailwind CSS v4 SPA built with Vite. The backend is a stateless FastAPI service that serves challenge manifests and a daily challenge. Profile, progress, badges, and settings are persisted in the browser via IndexedDB.
 
 ## Components
 
-### Browser
+### Frontend (`frontend/`)
 
-- Loads one of the HTML pages: `index.html`, `learn.html`, `challenge.html`, `profile.html`, `leaderboard.html`, or `settings.html`.
-- Scripts are loaded as classic `<script defer>` tags, not ES modules.
-- All shared code is attached to the global `window.CA` namespace.
+- `src/main.tsx` — React app entry. Wraps the app with `BrowserRouter` and `QueryClientProvider`.
+- `src/App.tsx` — route definitions for `/`, `/learn`, `/challenge/:id`, `/profile`, `/leaderboard`, `/settings`.
+- `src/pages/` — route-level page components: Dashboard, Learn, Challenge, Profile, Leaderboard, Settings.
+- `src/components/` — React components: Layout, Nav, HudBar, ChallengeCard, LabFrame, Loading.
+- `src/services/` — runtime services:
+  - `store.ts` — simple observable in-memory store for React subscriptions.
+  - `db.ts` — IndexedDB wrapper using `idb`.
+  - `api.ts` — backend fetch wrappers for challenge manifests, domains, and daily challenge.
+  - `gamify.ts` — XP/level, streaks, badges, and daily challenge logic.
+  - `progress.ts` — profile, progress, badges, and settings load/update helpers.
+- `src/config/domains.ts` — shared `DOMAINS` array.
+- `src/types.ts` — TypeScript interfaces for domain, challenge, progress, profile, badges, settings, daily challenge.
+- `src/index.css` — Tailwind CSS v4 CSS-first theme and utilities.
+- `public/legacy/` — legacy lab assets (`modules/**/lab.js`, `styles/`, `sandbox-runtime.js`) used by the sandboxed iframe.
 
-### Pages
+### Backend (`backend/`)
 
-- Each HTML page loads `src/global.js`, `src/storage-proxy.js`, the services it needs, relevant components, and a page boot script from `src/pages/*.js`.
-- There is no client-side router; navigation uses normal `<a href="...html">` links.
-
-### Runtime modules
-
-- `src/global.js` — creates `window.CA` namespaces.
-- `src/storage-proxy.js` — `db` service backed by `localStorage` (HTTP/HTTPS) or `window.name` (`file://`).
-- `src/services/store.js` — reactive state container.
-- `src/services/gamify.js` — XP/level, streaks, badges, daily challenges. Badges for non-`general` domains are generated from `window.CA.DOMAINS`.
-- `src/services/progress.js` — starts, completes, and resets challenges.
-- `src/modules/domains.js` — shared `window.CA.DOMAINS` array with labels, colors, and descriptions for each domain.
-- `src/modules/manifests.js` — global `window.CA.CHALLENGE_MANIFESTS` array, registered on `window.CA.validateManifest`, and validated at load time.
-- `src/modules/registry.js` — flat lookup over `CHALLENGE_MANIFESTS`.
-
-### UI layer
-
-- `src/components/` — self-registering Web Components.
-- `src/styles/` — CSS layers: tokens, base, components, animations, utilities.
-- All UI is styled with reusable external classes; dynamic values are passed via CSS custom properties.
-- The layout is mobile-first and responsive, scaling from single-column grids on narrow viewports to multi-column grids on larger screens.
+- `app/main.py` — FastAPI application with `/api/challenges`, `/api/challenges/{id}`, `/api/domains`, `/api/daily`, and CORS middleware.
+- `app/models.py` — Pydantic models for `Domain`, `ChallengeManifest`, and `DailyChallenge`.
+- `app/services/validator.py` — manifest validation logic ported from the legacy validator.
+- `app/data/challenges.json` and `app/data/domains.json` — extracted manifest data baked into the container image.
 
 ### Lab engine
 
-- `src/labs/lab-runner.js` — `LabRunner` class. Mounts a lab either:
-  - inside a sandboxed `srcdoc` `<iframe>` when served over HTTP/HTTPS, or
-  - directly into a Shadow DOM host on `file://` (or `about:` contexts such as `about:srcdoc`) to avoid local-resource restrictions.
-- `src/labs/sandbox-runtime.js` — runs inside the iframe, loads the requested lab from `window.CA.labs`, and relays `postMessage` events.
-- Labs are plain classic scripts that register themselves on `window.CA.labs[key]`.
-- The `general/welcome` lab is the beginner tutorial: it displays a boot log with a hidden flag and asks the player to submit it.
-
-### Content modules
-
-- `src/modules/<domain>/<challenge>/`
-  - `lab.js` — classic script that calls `window.CA.labs[key] = { mount(container, hooks) { ... } }`.
-- `src/modules/manifests.js` — central manifest registry.
-- `src/modules/registry.js` — lookup helpers.
+- `LabFrame` renders a `srcdoc` iframe with `sandbox="allow-scripts"`.
+- The iframe loads a challenge's `lab.js`, the legacy `sandbox-runtime.js`, and required CSS.
+- `sandbox-runtime.js` sends a `ready` message; the parent responds with `init` and the challenge object.
+- The lab calls `hooks.onComplete`, `hooks.onFail`, and `hooks.onHint`, which are relayed back to the parent via `postMessage`.
 
 ## Data flow
 
-1. Page loads `global.js`, `storage-proxy.js`, services, manifests, registry, components, and page boot script.
-2. Page boot script loads profile/progress/badges/settings from `db`.
-3. Components subscribe to `Store` and call `progress`/`gamify` services to mutate state.
-4. `db` serializes the shared object to `localStorage` or `window.name`.
-5. Other pages load the same data from storage on startup.
+1. `useInitState` loads profile, progress, badges, and settings from IndexedDB into `store`.
+2. `useChallenges` fetches the challenge manifest from `/api/challenges` via TanStack Query.
+3. Page components subscribe to `store` paths (profile, progress, badges, settings) with `useStore`.
+4. Starting a challenge writes a `started` progress record to IndexedDB.
+5. Completing a challenge writes `completed` progress, awards XP, updates the profile, and recomputes badges.
+6. The `HudBar` and `Profile` page react to store updates.
 
 ## State management
 
-- `Store` holds reactive JSON state.
-- Components subscribe for updates and re-render.
-- `db` (via `src/storage-proxy.js`) is the source of truth.
-- Writes go through `db`, then `Store`.
+- `store.ts` holds a global in-memory state object and notifies subscribers.
+- React components read store values via the `useStore` hook (`useSyncExternalStore`).
+- All persistence goes through `db.ts` (IndexedDB).
+- `progress.ts` coordinates writes to `db` and updates to `store`.
 
 ## Storage
 
-- HTTP/HTTPS deployments use `localStorage` key `CA::data`.
-- `file://` pages use `window.name` with `CA::` prefix because every `file:` URL is a separate origin.
-- Stores: `profiles`, `progress`, `badges`, `settings`.
-- See `DATABASE.md` for schemas.
+- Browser: IndexedDB stores `profiles`, `progress`, `badges`, `settings`, and `logs`.
+- Key `default` is used for the single profile/settings document.
+- Exports/imports are supported through `db.exportProfile` and `db.importProfile`.
+- See `DATABASE.md` for legacy schema details (storage shape remains compatible).
 
 ## Security model
 
 - No user authentication. Local profile only.
-- No backend network requests for core functionality.
-- Labs are untrusted. On HTTP/HTTPS they run in `srcdoc` iframes with `sandbox="allow-scripts"` and no `allow-same-origin`.
-- On `file://` labs run in a Shadow DOM host inside the parent page; they cannot make network requests and only communicate through the `hooks` object passed to `mount`.
+- The backend is stateless; no user data is stored or processed server-side.
+- Labs are untrusted and run in `srcdoc` iframes with `sandbox="allow-scripts"` and no `allow-same-origin`.
 - User payloads are never `eval`-ed. Labs implement deterministic checkers.

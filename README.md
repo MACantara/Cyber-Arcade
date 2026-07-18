@@ -1,23 +1,26 @@
 # Cyber-Arcade
 
-A static, gamified cyber-security learning platform that runs in the browser with no backend. It works when opened directly from `file://` or when served over HTTP/HTTPS.
+A full-stack, gamified cyber-security learning platform. The frontend is a React + TypeScript + Tailwind CSS v4 SPA built with Vite, and the backend is a stateless FastAPI service that serves challenge manifests and the daily challenge. Client-side persistence uses IndexedDB via `idb`.
 
 ## Quick start
 
-Open any page directly from the filesystem:
-
-- `index.html` — dashboard
-- `learn.html` — challenge list
-- `challenge.html?id=<challenge-id>` — a challenge
-- `profile.html`, `leaderboard.html`, `settings.html`
-
-Or serve the root with any static HTTP server:
+Start the backend:
 
 ```powershell
-python -m http.server 8000
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 80
 ```
 
-Then open `http://localhost:8000`.
+Start the frontend dev server:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Then open `http://localhost:5173`.
 
 ## What is this?
 
@@ -31,26 +34,40 @@ Earn XP, unlock badges, keep a streak, and view a local leaderboard.
 
 ## Tech stack
 
-- HTML5, CSS3, vanilla JavaScript (classic scripts, no build step)
-- Web Components (native custom elements)
-- Shared state through `window.name` for `file://` and `localStorage` for HTTP/HTTPS deployments
-- PWA manifest (service worker not currently registered)
+- **Frontend:** React 18, TypeScript 5, Vite 6, React Router 7, Tailwind CSS v4, TanStack Query, Lucide React, idb
+- **Backend:** Python 3.12+, FastAPI, Pydantic, Uvicorn
+- **Persistence:** IndexedDB for profile, progress, badges, and settings
+- **Deployment:** Vercel Services with container images (`frontend/` nginx, `backend/` uvicorn)
 
 ## Project docs
 
-- `AGENTS.md` — agent conventions and quick start
-- `DESIGN.md` — design system (tokens, colors, typography, components, responsive)
-- `ARCHITECTURE.md` — system architecture
-- `TESTING.md` — testing checklist
-- `STYLEGUIDE.md` — coding conventions
-- `SECURITY.md` — threat model and mitigations
-- `DATABASE.md` — storage schema
-- `ROADMAP.md` — planned features and potential new modules
-- `llms.txt` — repository index for LLMs
+Documentation lives in `docu/`:
+
+- `docu/AGENTS.md` — agent conventions and quick start
+- `docu/DESIGN.md` — design system (tokens, colors, typography, components, responsive)
+- `docu/ARCHITECTURE.md` — system architecture
+- `docu/TESTING.md` — testing checklist
+- `docu/STYLEGUIDE.md` — coding conventions
+- `docu/SECURITY.md` — threat model and mitigations
+- `docu/DATABASE.md` — storage schema
+- `docu/ROADMAP.md` — planned features and potential new modules
+- `docu/llms.txt` — repository index for LLMs
 
 ## Deployment
 
-`vercel.json` at the repo root configures Vercel to serve the project directory as a static site. Push to a Vercel-connected repo or run `vercel --prod` from the project root.
+`vercel.json` at the repo root configures Vercel Services with two containerized services:
+
+- `frontend/` built as an nginx container
+- `backend/` built as a uvicorn FastAPI container
+- `/api/*` requests are routed to the backend
+
+You can also run locally with Docker Compose:
+
+```powershell
+docker compose up --build
+```
+
+Then open `http://localhost:3000`.
 
 ## License
 
