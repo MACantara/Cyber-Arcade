@@ -28,13 +28,22 @@ function buildSrcdoc(challenge: ChallengeManifest) {
 
 export function LabFrame({ challenge, onComplete, onFail, onHint }: LabFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const initializedRef = useRef(false)
 
   useEffect(() => {
     function handleMessage(event: MessageEvent) {
       const iframe = iframeRef.current
       if (!iframe || event.source !== iframe.contentWindow) return
+
       const { type, data } = event.data || {}
-      if (type === 'complete') {
+
+      if (type === 'ready' && !initializedRef.current) {
+        initializedRef.current = true
+        ;(event.source as Window).postMessage(
+          { type: 'init', data: { challenge } },
+          '*'
+        )
+      } else if (type === 'complete') {
         onComplete(data || {})
       } else if (type === 'fail') {
         onFail?.(data || { message: 'Challenge failed.' })
@@ -43,9 +52,10 @@ export function LabFrame({ challenge, onComplete, onFail, onHint }: LabFrameProp
       }
     }
 
+    initializedRef.current = false
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
-  }, [onComplete, onFail, onHint])
+  }, [challenge, onComplete, onFail, onHint])
 
   return (
     <iframe
